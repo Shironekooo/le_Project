@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/mode"
+        android:title="Mode"
+        android:icon="@drawable/bnav_mode"/>
+    <item
+        android:id="@+id/articles"
+        android:title="Article"
+        android:icon="@drawable/bnav_articles"/>
+    <item
+        android:id="@+id/overview"
+        android:title="Overview"
+        android:icon="@drawable/bnav_overview"/>
+    <item
+        android:id="@+id/profile"
+        android:title="Profile"
+        android:icon="@drawable/bnav_profile"/>
+
+</menu>
