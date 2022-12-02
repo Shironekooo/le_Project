@@ -9,6 +9,10 @@
         android:title="@string/article"
         android:icon="@drawable/bnav_articles"/>
     <item
+        android:id="@+id/home"
+        android:title="@string/home"
+        android:icon="@drawable/bnav_home"/>
+    <item
         android:id="@+id/overview"
         android:title="@string/overview"
         android:icon="@drawable/bnav_overview"/>

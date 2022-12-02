@@ -20,8 +20,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-        bottomNavigationView.setSelectedItemId(R.id.mode);
+        bottomNavigationView.setSelectedItemId(R.id.home);
     }
+    HomeFragment homeFragment = new HomeFragment();
     ArticlesFragment articlesFragment = new ArticlesFragment();
     ModeFragment modeFragment = new ModeFragment();
     OverviewFragment overviewFragment = new OverviewFragment();
@@ -31,6 +32,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         switch(item.getItemId()) {
+            case R.id.home:
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
+                return true;
+
             case R.id.articles:
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, articlesFragment).commit();
                 return true;

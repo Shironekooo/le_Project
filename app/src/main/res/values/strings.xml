@@ -9,4 +9,6 @@
     <string name="articles_fragment">Articles Fragment</string>
     <string name="overview_fragment">Overview Fragment</string>
     <string name="profile_fragment">Profile Fragment</string>
+    <string name="home_fragment">Home Fragment</string>
+    <string name="home">Home</string>
 </resources>
