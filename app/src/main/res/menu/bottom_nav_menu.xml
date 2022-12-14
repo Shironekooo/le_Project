@@ -6,7 +6,7 @@
         android:icon="@drawable/bnav_mode"/>
     <item
         android:id="@+id/articles"
-        android:title="@string/article"
+        android:title="@string/articles"
         android:icon="@drawable/bnav_articles"/>
     <item
         android:id="@+id/home"
