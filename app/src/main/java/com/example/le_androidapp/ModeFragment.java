@@ -33,11 +33,11 @@ public class ModeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-//    Button workingModeButton;
-//    Button restingModeButton;
+    Switch modeSwitch;
+
     Button faqButton;
 
-    Switch modeSwitch;
+    SharedPreferences sp;
     
     public ModeFragment() {
         // Required empty public constructor
@@ -76,7 +76,7 @@ public class ModeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_mode, container, false);
 
-        SharedPreferences sp = getActivity().getSharedPreferences("modeAndScreen", Context.MODE_PRIVATE);
+        sp = getActivity().getSharedPreferences("modeAndScreen", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
 
         modeSwitch = (Switch) view.findViewById(R.id.mode_change);
@@ -107,22 +107,6 @@ public class ModeFragment extends Fragment {
                 fr.commit();
             }
         });
-//        workingModeButton = (Button) view.findViewById(R.id.working_mode_button);
-//        restingModeButton = (Button) view.findViewById(R.id.resting_mode_button);
-//
-//        workingModeButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                // change global variable for switch
-//            }
-//        });
-//
-//        restingModeButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                // change global variable for switch
-//            }
-//        });
 
         return view;
     }

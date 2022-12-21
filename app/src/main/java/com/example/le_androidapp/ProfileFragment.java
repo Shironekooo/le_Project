@@ -26,6 +26,10 @@ public class ProfileFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    Button switchUser;
+    Button addUser;
+    Button logout;
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -63,7 +67,7 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        Button switchUser = (Button) view.findViewById(R.id.switch_user);
+        switchUser = (Button) view.findViewById(R.id.switch_user);
         switchUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,7 +75,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        Button addUser = (Button) view.findViewById(R.id.add_user);
+        addUser = (Button) view.findViewById(R.id.add_user);
         addUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,7 +83,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        Button logout = (Button) view.findViewById(R.id.logout);
+        logout = (Button) view.findViewById(R.id.logout);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

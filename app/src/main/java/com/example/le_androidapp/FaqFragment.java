@@ -27,6 +27,10 @@ public class FaqFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private ImageButton backButton;
+
+    SharedPreferences sp;
+
     public FaqFragment() {
         // Required empty public constructor
     }
@@ -64,13 +68,13 @@ public class FaqFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_faq, container, false);
 
-        ImageButton backButton = (ImageButton) view.findViewById(R.id.back_button);
+       sp = getActivity().getSharedPreferences("modeAndScreen", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
 
+        backButton = (ImageButton) view.findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences sp = getActivity().getSharedPreferences("modeAndScreen", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sp.edit();
                 editor.putString("currentScreen", "mode");
                 editor.commit();
 

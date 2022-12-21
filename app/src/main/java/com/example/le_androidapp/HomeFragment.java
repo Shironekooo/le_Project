@@ -29,6 +29,12 @@ public class HomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    ImageButton notificationsButton;
+    ImageButton settingsButton;
+
+    Button badPostureButtonResting;
+    Button badPostureButtonWorking;
+
     TextView txv;
 
     private int badPostureCount = 0;
@@ -74,9 +80,7 @@ public class HomeFragment extends Fragment {
         int modeSelect = sp.getInt("mode", -1);
         SharedPreferences.Editor editor = sp.edit();
 
-        ImageButton settingsButton = (ImageButton) view.findViewById(R.id.settings_button);
-        ImageButton notificationsButton = (ImageButton) view.findViewById(R.id.notification_button);
-
+        settingsButton = (ImageButton) view.findViewById(R.id.settings_button);
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,6 +92,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        notificationsButton = (ImageButton) view.findViewById(R.id.notification_button);
         notificationsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,8 +104,8 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        Button badPostureButtonWorking = (Button) view.findViewById(R.id.bad_posture_button);
-        Button badPostureButtonResting = (Button) view.findViewById(R.id.bad_posture_button_2);
+        badPostureButtonWorking = (Button) view.findViewById(R.id.bad_posture_button);
+        badPostureButtonResting = (Button) view.findViewById(R.id.bad_posture_button_2);
         txv = (TextView) view.findViewById(R.id.bad_posture_count);
 
         switch (modeSelect){

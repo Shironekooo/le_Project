@@ -27,6 +27,8 @@ public class NotificationsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    ImageButton backButton;
+
     public NotificationsFragment() {
         // Required empty public constructor
     }
@@ -63,8 +65,7 @@ public class NotificationsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
 
-        ImageButton backButton = (ImageButton)view.findViewById(R.id.back_button);
-
+        backButton = (ImageButton)view.findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
