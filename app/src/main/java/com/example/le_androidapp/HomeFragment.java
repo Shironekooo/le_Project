@@ -1,5 +1,7 @@
 package com.example.le_androidapp;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -26,9 +29,9 @@ public class HomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private int badPostureCount = 0;
-    Button badPostureButton;
     TextView txv;
+
+    private int badPostureCount = 0;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -67,12 +70,18 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        ImageButton settingsButton = (ImageButton)view.findViewById(R.id.settings_button);
-        ImageButton notificationsButton = (ImageButton)view.findViewById(R.id.notification_button);
+        SharedPreferences sp = getActivity().getSharedPreferences("modeAndScreen", Context.MODE_PRIVATE);
+        int modeSelect = sp.getInt("mode", -1);
+        SharedPreferences.Editor editor = sp.edit();
+
+        ImageButton settingsButton = (ImageButton) view.findViewById(R.id.settings_button);
+        ImageButton notificationsButton = (ImageButton) view.findViewById(R.id.notification_button);
 
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                editor.putString("currentScreen", "settings");
+                editor.commit();
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.container, new SettingsFragment());
                 fr.commit();
@@ -82,22 +91,42 @@ public class HomeFragment extends Fragment {
         notificationsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                editor.putString("currentScreen", "notifications");
+                editor.commit();
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.container, new NotificationsFragment());
                 fr.commit();
             }
         });
 
-        badPostureButton = (Button)view.findViewById(R.id.bad_posture_button);
+        Button badPostureButtonWorking = (Button) view.findViewById(R.id.bad_posture_button);
+        Button badPostureButtonResting = (Button) view.findViewById(R.id.bad_posture_button_2);
         txv = (TextView) view.findViewById(R.id.bad_posture_count);
 
-        badPostureButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                badPostureCount++;
-                txv.setText(Integer.toString(badPostureCount));
-            }
-        });
+        switch (modeSelect){
+            case 1:
+                badPostureButtonWorking.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        badPostureCount++;
+                        txv.setText(Integer.toString(badPostureCount));
+                    }
+                });
+                break;
+            case 2:
+                badPostureButtonResting.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        badPostureCount++;
+                        txv.setText(Integer.toString(badPostureCount));
+                    }
+                });
+                break;
+            case -1:
+            default:
+                Toast.makeText(getActivity(), "Error in Setting Mode", Toast.LENGTH_SHORT).show();
+                break;
+        }
 
         return view;
     }

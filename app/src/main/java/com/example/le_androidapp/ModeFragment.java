@@ -1,17 +1,27 @@
 package com.example.le_androidapp;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ModeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+
+//Mode 1 - Working
+//Mode 2 - Resting
+
 public class ModeFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -23,6 +33,12 @@ public class ModeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+//    Button workingModeButton;
+//    Button restingModeButton;
+    Button faqButton;
+
+    Switch modeSwitch;
+    
     public ModeFragment() {
         // Required empty public constructor
     }
@@ -58,6 +74,56 @@ public class ModeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_mode, container, false);
+        View view = inflater.inflate(R.layout.fragment_mode, container, false);
+
+        SharedPreferences sp = getActivity().getSharedPreferences("modeAndScreen", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+
+        modeSwitch = (Switch) view.findViewById(R.id.mode_change);
+        modeSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(modeSwitch.isChecked()) {
+                    editor.putInt("mode", 2);
+                    Toast.makeText(getActivity(), "Switched to Resting Mode", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    editor.putInt("mode", 1);
+                    Toast.makeText(getActivity(), "Switched to Working Mode", Toast.LENGTH_SHORT).show();
+                }
+                editor.commit();
+            }
+        });
+
+        faqButton = (Button) view.findViewById(R.id.faq_button);
+        faqButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editor.putString("currentScreen", "faq");
+                editor.commit();
+
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.container, new FaqFragment());
+                fr.commit();
+            }
+        });
+//        workingModeButton = (Button) view.findViewById(R.id.working_mode_button);
+//        restingModeButton = (Button) view.findViewById(R.id.resting_mode_button);
+//
+//        workingModeButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                // change global variable for switch
+//            }
+//        });
+//
+//        restingModeButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                // change global variable for switch
+//            }
+//        });
+
+        return view;
     }
 }

@@ -1,5 +1,7 @@
 package com.example.le_androidapp;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,6 +68,11 @@ public class NotificationsFragment extends Fragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SharedPreferences sp = getActivity().getSharedPreferences("modeAndScreen", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("currentScreen", "home");
+                editor.commit();
+
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.container, new HomeFragment());
                 fr.commit();

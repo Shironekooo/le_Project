@@ -13,10 +13,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link SettingsFragment#newInstance} factory method to
+ * Use the {@link FaqFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SettingsFragment extends Fragment {
+public class FaqFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,7 +27,7 @@ public class SettingsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public SettingsFragment() {
+    public FaqFragment() {
         // Required empty public constructor
     }
 
@@ -37,11 +37,11 @@ public class SettingsFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment SettingsFragment.
+     * @return A new instance of fragment FaqFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SettingsFragment newInstance(String param1, String param2) {
-        SettingsFragment fragment = new SettingsFragment();
+    public static FaqFragment newInstance(String param1, String param2) {
+        FaqFragment fragment = new FaqFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,20 +61,21 @@ public class SettingsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_faq, container, false);
 
-        ImageButton backButton = (ImageButton)view.findViewById(R.id.back_button);
+        ImageButton backButton = (ImageButton) view.findViewById(R.id.back_button);
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SharedPreferences sp = getActivity().getSharedPreferences("modeAndScreen", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
-                editor.putString("currentScreen", "home");
+                editor.putString("currentScreen", "mode");
                 editor.commit();
 
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.container, new HomeFragment());
+                fr.replace(R.id.container, new ModeFragment());
                 fr.commit();
             }
         });
