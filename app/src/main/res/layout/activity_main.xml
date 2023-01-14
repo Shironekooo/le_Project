@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/container"
     android:orientation="vertical"
+    android:background="@color/light_cyan"
     tools:context=".MainActivity">
 
     <FrameLayout
@@ -22,6 +23,7 @@
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="75dp"
+        android:background="@color/medium_light_cyan"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

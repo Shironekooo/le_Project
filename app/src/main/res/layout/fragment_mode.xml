@@ -13,9 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/calibration_modes"
-        android:textColor="#43a047"
+        android:textColor="@color/dark_cyan"
         android:textSize="40sp"
-        android:textStyle="italic|bold"
+        android:textStyle="bold"
         android:layout_weight="1"
         android:textAlignment="center"
         android:gravity="center" />
@@ -28,7 +28,7 @@
         android:textAlignment="center"
         android:gravity="center"
         android:text="@string/switch_text_1"
-        android:textColor="@color/black"
+        android:textColor="@color/medium_dark_cyan"
         android:textSize="30sp"
         android:layout_weight="1" />
 
@@ -72,7 +72,7 @@
         android:textAlignment="center"
         android:gravity="center"
         android:text="@string/switch_text_2"
-        android:textColor="@color/black"
+        android:textColor="@color/medium_dark_cyan"
         android:textSize="30sp"
         android:layout_weight="1" />
 

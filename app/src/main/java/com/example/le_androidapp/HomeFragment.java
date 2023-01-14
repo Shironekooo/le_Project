@@ -3,6 +3,7 @@ package com.example.le_androidapp;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +69,13 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                txv.setText(Integer.toString(badPostureCount));
+            }
+        }, 0);
     }
 
     @Override
