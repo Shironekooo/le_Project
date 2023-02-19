@@ -101,7 +101,19 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 editor.commit();
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, modeFragment).commit();
                 break;
+            case "userlist":
+                bottomNavigationView.setSelectedItemId(R.id.profile);
+                editor.putString("currentScreen", "profile");
+                editor.commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, profileFragment).commit();
+                break;
+            case "adduser":
+                editor.putString("currentScreen", "userlist");
+                editor.commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new UserlistFragment()).commit();
+                break;
             case "home":
+            default:
                 super.onBackPressed();
                 break;
         }

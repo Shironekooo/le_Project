@@ -51,17 +51,6 @@
         android:layout_weight="1" />
 
     <Button
-        android:id="@+id/add_user"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_marginLeft="80dp"
-        android:layout_marginRight="80dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:text="Add User"
-        android:layout_weight="1" />
-
-    <Button
         android:id="@+id/logout"
         android:layout_width="match_parent"
         android:layout_height="20dp"
@@ -71,6 +60,5 @@
         android:layout_marginBottom="5dp"
         android:text="Logout"
         android:layout_weight="1" />
-
 
 </androidx.appcompat.widget.LinearLayoutCompat>

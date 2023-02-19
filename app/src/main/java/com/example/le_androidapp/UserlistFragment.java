@@ -7,18 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
+ * Use the {@link UserlistFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
-public class ProfileFragment extends Fragment {
+public class UserlistFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,10 +27,14 @@ public class ProfileFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    Button switchUser;
-    Button logout;
-
     SharedPreferences sp;
+
+    Button backButton;
+    Button addButton;
+
+    public UserlistFragment() {
+        // Required empty public constructor
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -40,20 +42,16 @@ public class ProfileFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileFragment.
+     * @return A new instance of fragment UserlistFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ProfileFragment newInstance(String param1, String param2) {
-        ProfileFragment fragment = new ProfileFragment();
+    public static UserlistFragment newInstance(String param1, String param2) {
+        UserlistFragment fragment = new UserlistFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public ProfileFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -68,30 +66,35 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_userlist, container, false);
 
-        sp = getActivity().getSharedPreferences("modeAndScreen", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-
-        switchUser = (Button) view.findViewById(R.id.switch_user);
-        switchUser.setOnClickListener(new View.OnClickListener() {
+        backButton = (Button) view.findViewById(R.id.userlistback);
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editor.putString("currentScreen", "userlist");
+                SharedPreferences sp = getActivity().getSharedPreferences("modeAndScreen", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("currentScreen", "profile");
                 editor.commit();
 
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.container, new UserlistFragment());
+                fr.replace(R.id.container, new ProfileFragment());
                 fr.commit();
             }
         });
 
-        logout = (Button) view.findViewById(R.id.logout);
-        logout.setOnClickListener(new View.OnClickListener() {
+        addButton = (Button) view.findViewById(R.id.userlistadd);
+        addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "To Logout", Toast.LENGTH_SHORT).show();
+                SharedPreferences sp = getActivity().getSharedPreferences("modeAndScreen", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("currentScreen", "adduser");
+                editor.commit();
+
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.container, new AdduserFragment());
+                fr.commit();
             }
         });
 
