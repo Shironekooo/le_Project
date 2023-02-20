@@ -1,6 +1,7 @@
 package com.example.le_androidapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -110,7 +111,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             case "adduser":
                 editor.putString("currentScreen", "userlist");
                 editor.commit();
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, new UserlistFragment()).commit();
+                Intent intent = new Intent(this, UserListActivity.class);
+                startActivity(intent);
                 break;
             case "home":
             default:
