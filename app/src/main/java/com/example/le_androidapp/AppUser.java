@@ -5,6 +5,7 @@ import java.util.Date;
 
 public class AppUser {
     public static ArrayList<AppUser> userArrayList = new ArrayList<>();
+    public static String USER_EDIT_EXTRA = "userEdit";
 
     private int id;
     private String username;
@@ -23,6 +24,25 @@ public class AppUser {
         this.username = username;
         this.badCount = badCount;
         deleted = null;
+    }
+
+    public static AppUser getUserForId(int passedUserId) {
+        for (AppUser appUser : userArrayList) {
+            if (appUser.getId() == passedUserId) {
+                return appUser;
+            }
+        }
+        return null;
+    }
+
+    public static ArrayList<AppUser> nonDeletedNotes() {
+        ArrayList<AppUser> nonDeleted = new ArrayList<>();
+        for(AppUser appUser : userArrayList) {
+            if(appUser.getDeleted() == null)
+                nonDeleted.add(appUser);
+        }
+
+        return nonDeleted;
     }
 
     public int getId() {

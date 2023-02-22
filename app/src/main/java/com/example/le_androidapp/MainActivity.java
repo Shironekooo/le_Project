@@ -12,12 +12,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
+
     BottomNavigationView bottomNavigationView;
 
     SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -80,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     public void onBackPressed() {
+
         SharedPreferences sp = getSharedPreferences("modeAndScreen", Context.MODE_PRIVATE);
         String screen = sp.getString("currentScreen", "blank");
         SharedPreferences.Editor editor = sp.edit();

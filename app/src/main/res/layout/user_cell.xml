@@ -14,7 +14,7 @@
             android:id="@+id/cellName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Maria Dela Cruz"
+            android:text="Name"
             android:textStyle="bold"
             android:maxLines="2"
             android:textColor="@color/black"

@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import java.util.List;
 
 public class UserAdapter extends ArrayAdapter<AppUser> {
+
     public UserAdapter(Context context, List<AppUser> appUserList)
     {
         super(context, 0, appUserList);
