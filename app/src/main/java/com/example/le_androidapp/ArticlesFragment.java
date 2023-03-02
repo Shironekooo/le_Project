@@ -85,10 +85,7 @@ public class ArticlesFragment extends Fragment {
         emergencyHotlinesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setData(Uri.parse("https://dumaguete.com/emergency-contacts-numbers/"));
+                Intent intent = new Intent(getContext(), ImageDialogueActivity.class);
                 startActivity(intent);
             }
         });
