@@ -1,7 +1,6 @@
 package com.example.le_androidapp;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -30,9 +29,9 @@ public class UserListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 AppUser selectedUser = (AppUser) userListView.getItemAtPosition(position);
-                Intent editNoteIntent = new Intent(getApplicationContext(), UserDetailActivity.class);
-                editNoteIntent.putExtra(AppUser.USER_EDIT_EXTRA, selectedUser.getId());
-                startActivity(editNoteIntent);
+                //Intent editNoteIntent = new Intent(getApplicationContext(), UserDetailActivity.class);
+                //editNoteIntent.putExtra(AppUser.USER_EDIT_EXTRA, selectedUser.getId());
+                //startActivity(editNoteIntent);
             }
         });
     }
@@ -47,13 +46,13 @@ public class UserListActivity extends AppCompatActivity {
     }
 
     private void setUserAdapter() {
-        UserAdapter userAdapter = new UserAdapter(getApplicationContext(), AppUser.nonDeletedNotes());
-        userListView.setAdapter(userAdapter);
+        //UserAdapter userAdapter = new UserAdapter(getApplicationContext(), AppUser.nonDeletedNotes());
+        //userListView.setAdapter(userAdapter);
     }
 
     public void newUser(View view) {
-        Intent newUserIntent = new Intent(this, UserDetailActivity.class);
-        startActivity(newUserIntent);
+        //Intent newUserIntent = new Intent(this, UserDetailActivity.class);
+        //startActivity(newUserIntent);
     }
 
     @Override
@@ -64,7 +63,7 @@ public class UserListActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        SharedPreferences sp = getSharedPreferences("modeAndScreen",Context.MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences("sharedData",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
 
         editor.putString("currentScreen", "profile");

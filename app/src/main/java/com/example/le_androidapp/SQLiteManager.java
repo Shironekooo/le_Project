@@ -1,16 +1,11 @@
 package com.example.le_androidapp;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class SQLiteManager extends SQLiteOpenHelper {
 
@@ -24,13 +19,13 @@ public class SQLiteManager extends SQLiteOpenHelper {
     private static final String ID_FIELD = "id";
     private static final String USERNAME_FIELD = "username";
     private static final String BADCOUNT_FIELD = "badCount";
-    private static final String DELETED_FIELD = "deleted";
+    private static final String SELECTED_FIELD = "selected";
 
-    @SuppressLint("SimpleDateFormat")
-    private static final DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+    private final Context fContext;
 
     public SQLiteManager(Context context) {
         super(context, DB_NAME, null, DB_VER);
+        fContext = context;
     }
 
     public static SQLiteManager instanceOfDatabase(Context context) {
@@ -42,23 +37,35 @@ public class SQLiteManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+
+        // Database Creation
         StringBuilder sql;
         sql = new StringBuilder()
-                .append("CREATE TABLE ")
-                .append(TABLE_NAME)
-                .append("(")
-                .append(COUNTER)
-                .append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
-                .append(ID_FIELD)
-                .append(" INT, ")
-                .append(USERNAME_FIELD)
-                .append(" TEXT, ")
-                .append(BADCOUNT_FIELD)
-                .append(" INT, ")
-                .append(DELETED_FIELD)
-                .append(" TEXT)");
+                .append("CREATE TABLE ").append(TABLE_NAME).append("(")
+                .append(COUNTER).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                .append(ID_FIELD).append(" INT, ")
+                .append(USERNAME_FIELD).append(" TEXT, ")
+                .append(BADCOUNT_FIELD).append(" INT, ")
+                .append(SELECTED_FIELD).append(" INT)");
 
         sqLiteDatabase.execSQL(sql.toString());
+
+        // Database Value Initialization
+        final int STARTING_COUNT = 0;
+        ContentValues values = new ContentValues();
+        Resources resources =   fContext.getResources();
+        String[] initArray = resources.getStringArray(R.array.name_array);
+        int id_count = 0;
+        int select = 1;
+        for (String item : initArray) {
+            values.put(ID_FIELD, id_count);
+            id_count++;
+            values.put(USERNAME_FIELD, item);
+            values.put(BADCOUNT_FIELD, STARTING_COUNT);
+            values.put(SELECTED_FIELD, select);
+            select--;
+            sqLiteDatabase.insert(TABLE_NAME, null, values);
+        }
     }
 
     @Override
@@ -73,7 +80,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
         contentValues.put(ID_FIELD, appUser.getId());
         contentValues.put(USERNAME_FIELD, appUser.getUsername());
         contentValues.put(BADCOUNT_FIELD, appUser.getBadCount());
-        contentValues.put(DELETED_FIELD, getStringFromDate(appUser.getDeleted()));
+        contentValues.put(SELECTED_FIELD, appUser.getSelected());
 
         sqLiteDatabase.insert(TABLE_NAME, null, contentValues);
     }
@@ -87,10 +94,9 @@ public class SQLiteManager extends SQLiteOpenHelper {
                     int id = result.getInt(1);
                     String username = result.getString(2);
                     int badCount = result.getInt(3);
-                    String stringDeleted = result.getString(4);
-                    Date deleted = getDateFromString(stringDeleted);
+                    int selected = result.getInt(4);
 
-                    AppUser appUser = new AppUser(id, username, badCount, deleted);
+                    AppUser appUser = new AppUser(id, username, badCount, selected);
                     AppUser.userArrayList.add(appUser);
                 }
             }
@@ -103,21 +109,9 @@ public class SQLiteManager extends SQLiteOpenHelper {
         contentValues.put(ID_FIELD, appUser.getId());
         contentValues.put(USERNAME_FIELD, appUser.getUsername());
         contentValues.put(BADCOUNT_FIELD, appUser.getBadCount());
-        contentValues.put(DELETED_FIELD, getStringFromDate(appUser.getDeleted()));
+        contentValues.put(SELECTED_FIELD, appUser.getSelected());
 
         sqLiteDatabase.update(TABLE_NAME, contentValues, ID_FIELD + " =? ", new String[]{String.valueOf(appUser.getId())});
     }
 
-    private String getStringFromDate(Date date) {
-        if (date == null) return null;
-        return dateFormat.format(date);
-    }
-
-    private Date getDateFromString(String string){
-        try {
-            return dateFormat.parse(string);
-        } catch (ParseException | NullPointerException e) {
-            return null;
-        }
-    }
 }

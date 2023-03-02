@@ -1,7 +1,6 @@
 package com.example.le_androidapp;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class AppUser {
     public static ArrayList<AppUser> userArrayList = new ArrayList<>();
@@ -10,20 +9,13 @@ public class AppUser {
     private int id;
     private String username;
     private int badCount;
-    private Date deleted;
+    private int selected;
 
-    public AppUser(int id, String username, int badCount, Date deleted) {
+    public AppUser(int id, String username, int badCounter, int selected) {
         this.id = id;
         this.username = username;
         this.badCount = badCount;
-        this.deleted = deleted;
-    }
-
-    public AppUser(int id, String username, int badCount) {
-        this.id = id;
-        this.username = username;
-        this.badCount = badCount;
-        deleted = null;
+        this.selected = selected;
     }
 
     public static AppUser getUserForId(int passedUserId) {
@@ -35,14 +27,12 @@ public class AppUser {
         return null;
     }
 
-    public static ArrayList<AppUser> nonDeletedNotes() {
-        ArrayList<AppUser> nonDeleted = new ArrayList<>();
-        for(AppUser appUser : userArrayList) {
-            if(appUser.getDeleted() == null)
-                nonDeleted.add(appUser);
+    public static AppUser currentlySelectedUser() {
+        for (AppUser appUser : userArrayList) {
+            if (appUser.getSelected() == 1) return appUser;
         }
 
-        return nonDeleted;
+        return null;
     }
 
     public int getId() {
@@ -69,11 +59,11 @@ public class AppUser {
         this.badCount = badCount;
     }
 
-    public Date getDeleted() {
-        return deleted;
+    public int getSelected() {
+        return selected;
     }
 
-    public void setDeleted(Date deleted) {
-        this.deleted = deleted;
+    public void setSelected(int selected) {
+        this.selected = selected;
     }
 }

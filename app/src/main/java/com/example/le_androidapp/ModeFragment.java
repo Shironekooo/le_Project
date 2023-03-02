@@ -38,7 +38,7 @@ public class ModeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mode, container, false);
 
-        sp = getActivity().getSharedPreferences("modeAndScreen", Context.MODE_PRIVATE);
+        sp = getActivity().getSharedPreferences("sharedData", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
 
         modeSwitch = (Switch) view.findViewById(R.id.mode_change);

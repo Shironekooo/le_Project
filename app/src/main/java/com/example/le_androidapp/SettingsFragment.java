@@ -48,7 +48,7 @@ public class SettingsFragment extends Fragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sp = getActivity().getSharedPreferences("modeAndScreen", Context.MODE_PRIVATE);
+                sp = getActivity().getSharedPreferences("sharedData", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putString("currentScreen", "home");
                 editor.commit();

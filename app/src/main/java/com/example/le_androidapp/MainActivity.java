@@ -1,7 +1,6 @@
 package com.example.le_androidapp;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -23,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sp = getSharedPreferences("modeAndScreen", Context.MODE_PRIVATE);
+        sp = getSharedPreferences("sharedData", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt("mode", 1);
         editor.putString("currentScreen", "blank");
@@ -43,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        sp = getSharedPreferences("modeAndScreen", Context.MODE_PRIVATE);
+        sp = getSharedPreferences("sharedData", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
 
         switch(item.getItemId()) {
@@ -83,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     public void onBackPressed() {
 
-        SharedPreferences sp = getSharedPreferences("modeAndScreen", Context.MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences("sharedData", Context.MODE_PRIVATE);
         String screen = sp.getString("currentScreen", "blank");
         SharedPreferences.Editor editor = sp.edit();
 
@@ -105,17 +104,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 editor.commit();
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, modeFragment).commit();
                 break;
-            case "userlist":
+            case "switchUser":
                 bottomNavigationView.setSelectedItemId(R.id.profile);
                 editor.putString("currentScreen", "profile");
                 editor.commit();
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, profileFragment).commit();
-                break;
-            case "adduser":
-                editor.putString("currentScreen", "userlist");
-                editor.commit();
-                Intent intent = new Intent(this, UserListActivity.class);
-                startActivity(intent);
                 break;
             case "home":
             default:

@@ -33,7 +33,7 @@ public class NotificationsFragment extends Fragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences sp = getActivity().getSharedPreferences("modeAndScreen", Context.MODE_PRIVATE);
+                SharedPreferences sp = getActivity().getSharedPreferences("sharedData", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putString("currentScreen", "home");
                 editor.commit();
