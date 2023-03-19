@@ -47,13 +47,14 @@ public class ModeFragment extends Fragment {
             public void onClick(View view) {
                 if(modeSwitch.isChecked()) {
                     editor.putInt("mode", 2);
+                    editor.commit();
                     Toast.makeText(getActivity(), "Switched to Resting Mode", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     editor.putInt("mode", 1);
+                    editor.commit();
                     Toast.makeText(getActivity(), "Switched to Working Mode", Toast.LENGTH_SHORT).show();
                 }
-                editor.commit();
             }
         });
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,12 +70,16 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+        Vibrator v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+
         phoneVibrateSwitch = (Switch) view.findViewById(R.id.setting_switch2);
         phoneVibrateSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(phoneVibrateSwitch.isChecked())
+                if(phoneVibrateSwitch.isChecked()) {
+                    v.vibrate(250);
                     Toast.makeText(getActivity(), "Phone Vibration Turned On", Toast.LENGTH_SHORT).show();
+                }
                 else Toast.makeText(getActivity(), "Phone Vibration Turned Off", Toast.LENGTH_SHORT).show();
             }
         });
