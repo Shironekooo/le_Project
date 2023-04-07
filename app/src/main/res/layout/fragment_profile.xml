@@ -24,8 +24,8 @@
         android:id="@+id/imageView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:src="@mipmap/ic_tempface" />
+        android:layout_weight="3" />
+    <!--    android:src="@mipmap/ic_tempface" -->
 
     <TextView
         android:id="@+id/userName"
