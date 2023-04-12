@@ -2,22 +2,32 @@ package com.example.le_androidapp;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 
-import com.example.le_androidapp.data.AccelResult;
+import com.example.le_androidapp.data.DeviceResult;
+import com.example.le_androidapp.data.ConnectionState;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class OverviewFragment extends Fragment {
 
     //AccelResult accelResult;
 
-    TextView xView;
-    TextView yView;
-    TextView zView;
+    @Inject DeviceViewModel deviceViewModel;
+
+    TextView pitchView;
+    TextView rollView;
+    TextView flexView;
 
     public OverviewFragment() {
         // Required empty public constructor
@@ -26,18 +36,6 @@ public class OverviewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        /*
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                xView.setText(Integer.toString((int) accelResult.getXAccel()));
-                yView.setText(Integer.toString((int) accelResult.getYAccel()));
-                zView.setText(Integer.toString((int) accelResult.getZAccel()));
-            }
-        }, 0);
-
-         */
     }
 
     @Override
@@ -45,16 +43,21 @@ public class OverviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_overview, container, false);
 
-        /*
-        xView = (TextView) view.findViewById(R.id.accelX);
-        yView = (TextView) view.findViewById(R.id.accelY);
-        zView = (TextView) view.findViewById(R.id.accelZ);
+        pitchView = (TextView) view.findViewById(R.id.rollView);
+        rollView = (TextView) view.findViewById(R.id.pitchView);
+        flexView = (TextView) view.findViewById(R.id.flexView);
 
-        xView.setText(Integer.toString((int) accelResult.getXAccel()));
-        yView.setText(Integer.toString((int) accelResult.getYAccel()));
-        zView.setText(Integer.toString((int) accelResult.getZAccel()));
-
-         */
+        deviceViewModel.getConnectionState().observe(getViewLifecycleOwner(), new Observer<ConnectionState>() {
+            @Override
+            public void onChanged(ConnectionState connectionState) {
+                Log.e("OverviewFragment", "LifeCycleOnChanged");
+                if (connectionState instanceof ConnectionState.Connected) {
+                    pitchView.setText(Float.toString(((ConnectionState.Connected) connectionState).getXVal()));
+                    rollView.setText(Float.toString(((ConnectionState.Connected) connectionState).getYVal()));
+                    flexView.setText(Float.toString(((ConnectionState.Connected) connectionState).getZVal()));
+                }
+            }
+        });
 
         return view;
     }

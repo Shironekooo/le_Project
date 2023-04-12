@@ -7,7 +7,7 @@ import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.util.Log
-import com.example.le_androidapp.data.AccelResult
+import com.example.le_androidapp.data.DeviceResult
 import com.example.le_androidapp.data.ConnectionState
 import com.example.le_androidapp.data.DeviceReceiveManager
 import com.example.le_androidapp.util.Resource
@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
+
 
 @SuppressLint("MissingPermission")
 class DeviceBLEReceiveManager @Inject constructor(
@@ -29,7 +30,7 @@ class DeviceBLEReceiveManager @Inject constructor(
     private val ACCEL_CHARACTERISTIC_UUID = "cba1d469-344c-4be3-ab3f-189f80dd7518"
 
 
-    override val data: MutableSharedFlow<Resource<AccelResult>> = MutableSharedFlow()
+    override val data: MutableSharedFlow<Resource<DeviceResult>> = MutableSharedFlow()
 
     private val bleScanner by lazy {
         bluetoothAdapter.bluetoothLeScanner
@@ -52,6 +53,7 @@ class DeviceBLEReceiveManager @Inject constructor(
                 coroutineScope.launch {
                     data.emit(Resource.Loading(message = "Connecting to device..."))
                 }
+                Log.e("BLE", "Connecting to device")
                 if(isScanning){
                     result.device.connectGatt(context,false, gattCallback)
                     isScanning = false
@@ -75,7 +77,7 @@ class DeviceBLEReceiveManager @Inject constructor(
                     this@DeviceBLEReceiveManager.gatt = gatt
                 } else if(newState == BluetoothProfile.STATE_DISCONNECTED){
                     coroutineScope.launch {
-                        data.emit(Resource.Success(data = AccelResult(0f, 0f, 0f, ConnectionState.Disconnected)))
+                        data.emit(Resource.Success(data = DeviceResult(0f, 0f, 0f, ConnectionState.Disconnected)))
                     }
                     gatt.close()
                 }
@@ -88,6 +90,7 @@ class DeviceBLEReceiveManager @Inject constructor(
                             message = "Attempting to connect $currentConnectionAttempt/$MAXIMUM_CONNECTION_ATTEMPTS"
                         )
                     )
+                    Log.e("BLE", "Attempting to connect")
                 }
                 if(currentConnectionAttempt<=MAXIMUM_CONNECTION_ATTEMPTS){
                     startReceiving()
@@ -102,6 +105,7 @@ class DeviceBLEReceiveManager @Inject constructor(
         override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
             with(gatt){
                 printGattTable()
+                Log.e("BLE", "Services Discovered")
                 coroutineScope.launch {
                     data.emit(Resource.Loading(message = "Adjusting MTU space..."))
                 }
@@ -130,15 +134,15 @@ class DeviceBLEReceiveManager @Inject constructor(
                     UUID.fromString(ACCEL_CHARACTERISTIC_UUID) -> {
                         val tempValHolder = characteristic.getStringValue(0)
                         val list:List<String> = listOf(*tempValHolder.split(",").toTypedArray())
-                        val tempX = list.get(0).toFloat()
-                        val tempY = list.get(1).toFloat()
-                        val tempZ = list.get(2).toFloat()
+                        val pitch = list.get(0).toFloat()
+                        val roll = list.get(1).toFloat()
+                        val flex = list.get(2).toFloat()
 
-                        val accelCharas = AccelResult(
-                            tempX,
-                            tempY,
-                            tempZ,
-                            ConnectionState.Connected
+                        val accelCharas = DeviceResult(
+                            pitch,
+                            roll,
+                            flex,
+                            ConnectionState.Connected(pitch, roll, flex)
                         )
                         coroutineScope.launch {
                             data.emit(
@@ -189,6 +193,7 @@ class DeviceBLEReceiveManager @Inject constructor(
     override fun startReceiving() {
         coroutineScope.launch {
             data.emit(Resource.Loading(message = "Scanning Ble devices..."))
+            Log.e("BLE", "Scanning")
         }
         isScanning = true
         bleScanner.startScan(null,scanSettings,scanCallback)
@@ -209,6 +214,7 @@ class DeviceBLEReceiveManager @Inject constructor(
         if(characteristic != null){
             disconnectCharacteristic(characteristic)
         }
+        Log.e("BLE", "Closing Connection")
         gatt?.close()
     }
 

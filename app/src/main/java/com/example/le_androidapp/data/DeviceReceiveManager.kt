@@ -1,11 +1,12 @@
 package com.example.le_androidapp.data;
 
+import com.example.le_androidapp.DeviceViewModel
 import com.example.le_androidapp.util.Resource
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 interface DeviceReceiveManager {
 
-    val data: MutableSharedFlow<Resource<AccelResult>>
+    val data: MutableSharedFlow<Resource<DeviceResult>>
 
     fun reconnect()
 

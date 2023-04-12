@@ -1,9 +1,11 @@
 package com.example.le_androidapp;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,16 +14,35 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 
+import com.example.le_androidapp.data.DeviceResult;
+import com.example.le_androidapp.data.ConnectionState;
+import com.example.le_androidapp.data.DeviceReceiveManager;
+import com.example.le_androidapp.data.ble.DeviceBLEReceiveManager;
+import com.example.le_androidapp.util.Resource;
+
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+import kotlinx.coroutines.flow.MutableSharedFlow;
+
+
+//Include requirement for user to open bluetooth
+@AndroidEntryPoint
 public class HomeFragment extends Fragment {
+
+    @Inject DeviceViewModel deviceViewModel;
 
     ImageButton notificationsButton;
     ImageButton settingsButton;
 
     Button badPostureButtonResting;
     Button badPostureButtonWorking;
+    Button bleButton;
 
     TextView txv;
 
@@ -51,6 +72,21 @@ public class HomeFragment extends Fragment {
         SharedPreferences sp = getActivity().getSharedPreferences("sharedData", Context.MODE_PRIVATE);
         int modeSelect = sp.getInt("mode", -1);
         SharedPreferences.Editor editor = sp.edit();
+
+        deviceViewModel.getConnectionState().observe(getViewLifecycleOwner(), new Observer<ConnectionState>() {
+            @Override
+            public void onChanged(ConnectionState connectionState) {
+                Log.e("HomeFragment", "LifeCycleOnChanged");
+            }
+        });
+
+        /*
+        deviceBLEReceiveManager = new DeviceBLEReceiveManager(
+                BluetoothAdapter.getDefaultAdapter(),
+                requireContext()
+        );
+
+         */
 
         settingsButton = (ImageButton) view.findViewById(R.id.settings_button);
         settingsButton.setOnClickListener(new View.OnClickListener() {
@@ -104,6 +140,20 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getActivity(), "Error in Setting Mode", Toast.LENGTH_SHORT).show();
                 break;
         }
+
+        bleButton = (Button) view.findViewById(R.id.ble_scan_button);
+        bleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Uninitialized) {
+                    deviceViewModel.initializeConnection();
+                    Log.e("HomeFragment", "InitializedConnection");
+                } else if (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Connected) {
+                    deviceViewModel.disconnect();
+                    Log.e("HomeFragment", "Disconnected");
+                }
+            }
+        });
 
         return view;
     }
