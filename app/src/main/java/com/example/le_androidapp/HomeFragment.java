@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,8 +31,6 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import kotlinx.coroutines.flow.MutableSharedFlow;
 
-
-//Include requirement for user to open bluetooth
 @AndroidEntryPoint
 public class HomeFragment extends Fragment {
 
@@ -45,6 +44,8 @@ public class HomeFragment extends Fragment {
     Button bleButton;
 
     TextView txv;
+
+    ImageView bendy;
 
     private int badPostureCount = 0;
 
@@ -73,20 +74,16 @@ public class HomeFragment extends Fragment {
         int modeSelect = sp.getInt("mode", -1);
         SharedPreferences.Editor editor = sp.edit();
 
+        bendy = (ImageView) view.findViewById(R.id.bendy_guy);
+
         deviceViewModel.getConnectionState().observe(getViewLifecycleOwner(), new Observer<ConnectionState>() {
             @Override
             public void onChanged(ConnectionState connectionState) {
                 Log.e("HomeFragment", "LifeCycleOnChanged");
+
+                // put code to change bendy guy's image here
             }
         });
-
-        /*
-        deviceBLEReceiveManager = new DeviceBLEReceiveManager(
-                BluetoothAdapter.getDefaultAdapter(),
-                requireContext()
-        );
-
-         */
 
         settingsButton = (ImageButton) view.findViewById(R.id.settings_button);
         settingsButton.setOnClickListener(new View.OnClickListener() {
@@ -148,9 +145,12 @@ public class HomeFragment extends Fragment {
                 if (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Uninitialized) {
                     deviceViewModel.initializeConnection();
                     Log.e("HomeFragment", "InitializedConnection");
+                    Toast.makeText(getActivity(), "Initializing connection", Toast.LENGTH_SHORT).show();
                 } else if (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Connected) {
                     deviceViewModel.disconnect();
                     Log.e("HomeFragment", "Disconnected");
+                } else if (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Disconnected) {
+                    Toast.makeText(getActivity(), "Please restart the device to reconnect", Toast.LENGTH_SHORT).show();
                 }
             }
         });

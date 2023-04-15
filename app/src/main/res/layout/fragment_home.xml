@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".HomeFragment">
+
+    <!--
+        TODO: bendy guy display
+        bending guy is based on gyroscope
+        8 sec for flex sensor to determine bend or slouch
+    -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +26,6 @@
             android:src="@drawable/home_notification" />
 
         <View
-            android:id="@+id/view"
             android:layout_width="0dp"
             android:layout_height="75dp"
             android:layout_weight="1" />
@@ -33,9 +38,21 @@
             android:src="@drawable/home_settings" />
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/bendy_guy"
+        android:layout_height="250dp"
+        android:layout_width="250dp"
+        android:layout_marginTop="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"/>
+
     <RelativeLayout
+        android:id="@+id/countLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="250dp"
         android:layout_gravity="center">
 
         <ImageView
@@ -52,9 +69,6 @@
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
-            android:layout_marginTop="100dp"
-            android:layout_marginEnd="411dp"
-            android:layout_marginBottom="50dp"
             android:textColor="@color/white"
             android:textSize="100sp" />
 
@@ -64,12 +78,15 @@
         android:id="@+id/ble_scan_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Scan for Device"/>
+        android:layout_below="@id/countLayout"
+        android:layout_marginTop="25dp"
+        android:layout_centerInParent="true"
+        android:text="Connect/Disconnect"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/ble_scan_button"
         android:orientation="horizontal" >
 
         <Button
@@ -78,8 +95,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="50sp"
             android:layout_marginRight="25sp"
-            android:layout_marginTop="15sp"
-            android:layout_marginBottom="15sp"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:text="Bad While Work" />
@@ -90,12 +105,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="50sp"
             android:layout_marginRight="25sp"
-            android:layout_marginTop="15sp"
-            android:layout_marginBottom="15sp"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:text="Bad While Rest" />
     </LinearLayout>
 
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+</RelativeLayout>
