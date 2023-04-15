@@ -80,7 +80,22 @@ public class HomeFragment extends Fragment {
             @Override
             public void onChanged(ConnectionState connectionState) {
                 Log.e("HomeFragment", "LifeCycleOnChanged");
+                if (connectionState instanceof ConnectionState.Connected) {
+                    Log.e("HomeFragment", "LifeCycleOnChanged-Connected");
+                    float pitch = ((ConnectionState.Connected) connectionState).getYVal();
 
+                    if (pitch >= 0) bendy.setImageResource(R.drawable.body90);
+                    else if (pitch >= -2) bendy.setImageResource(R.drawable.body85);
+                    else if (pitch >= -4) bendy.setImageResource(R.drawable.body80);
+                    else if (pitch >= -6) bendy.setImageResource(R.drawable.body75);
+                    else if (pitch >= -8) bendy.setImageResource(R.drawable.body70);
+                    else if (pitch >= -9) bendy.setImageResource(R.drawable.body65);
+                    else if (pitch >= -10) bendy.setImageResource(R.drawable.body60);
+                    else if (pitch >= -12) bendy.setImageResource(R.drawable.body55);
+                    else if (pitch >= -14) bendy.setImageResource(R.drawable.body50);
+                    else if (pitch >= -16) bendy.setImageResource(R.drawable.body45);
+                    else bendy.setImageResource(R.drawable.body40);
+                }
                 // put code to change bendy guy's image here
             }
         });
@@ -144,7 +159,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 if (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Uninitialized) {
                     deviceViewModel.initializeConnection();
-                    Log.e("HomeFragment", "InitializedConnection");
+                    Log.e("HomeFragment", "InitializeConnection");
                     Toast.makeText(getActivity(), "Initializing connection", Toast.LENGTH_SHORT).show();
                 } else if (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Connected) {
                     deviceViewModel.disconnect();

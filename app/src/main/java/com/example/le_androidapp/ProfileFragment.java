@@ -40,18 +40,21 @@ public class ProfileFragment extends Fragment {
 
         txv = (TextView) view.findViewById(R.id.userName);
 
-        SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(getContext());
+        // SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(getContext());
 
         switchUser = (Button) view.findViewById(R.id.switch_user);
         switchUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /*
                 editor.putString("currentScreen", "switchUser");
                 editor.commit();
 
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.container, new UserSwitchFragment());
                 fr.commit();
+
+                 */
             }
         });
 
