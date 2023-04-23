@@ -165,6 +165,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        /*
         notificationsButton = (ImageButton) view.findViewById(R.id.notification_button);
         notificationsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,7 +178,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        /*
         badPostureButtonWorking = (Button) view.findViewById(R.id.bad_posture_button);
         badPostureButtonResting = (Button) view.findViewById(R.id.bad_posture_button_2);
 
