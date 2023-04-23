@@ -15,7 +15,7 @@
         android:textAlignment="center"
         android:gravity="center"
         android:text="@string/overview"
-        android:textColor="@color/dark_cyan"
+        android:textColor="@color/white"
         android:textSize="40sp"
         android:textStyle="bold"
         android:layout_weight="1"/>
@@ -33,7 +33,7 @@
             android:text="pitchNum"
             android:layout_gravity="center"
             android:layout_marginLeft="20sp"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="30sp" />
 
         <TextView
@@ -43,7 +43,7 @@
             android:text="pitch"
             android:layout_marginRight="20sp"
             android:gravity="end"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="50sp" />
 
     </LinearLayout>
@@ -61,7 +61,7 @@
             android:text="rollNum"
             android:layout_gravity="center"
             android:layout_marginLeft="20sp"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="30sp" />
 
         <TextView
@@ -71,7 +71,7 @@
             android:text="roll"
             android:layout_marginRight="20sp"
             android:gravity="end"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="50sp" />
 
     </LinearLayout>
@@ -89,7 +89,7 @@
             android:text="flexNum"
             android:layout_gravity="center"
             android:layout_marginLeft="20sp"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="30sp" />
 
         <TextView
@@ -99,7 +99,7 @@
             android:text="flex"
             android:layout_marginRight="20sp"
             android:gravity="end"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="50sp" />
 
     </LinearLayout>

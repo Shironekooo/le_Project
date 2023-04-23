@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/calibration_modes"
-        android:textColor="@color/dark_cyan"
+        android:textColor="@color/white"
         android:textSize="40sp"
         android:textStyle="bold"
         android:layout_weight="1"
@@ -28,32 +28,9 @@
         android:textAlignment="center"
         android:gravity="center"
         android:text="@string/switch_text_1"
-        android:textColor="@color/medium_dark_cyan"
+        android:textColor="@color/white"
         android:textSize="30sp"
         android:layout_weight="1" />
-
-    <!--    <Button-->
-    <!--        android:id="@+id/resting_mode_button"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:text="@string/resting_mode"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/working_mode_button"-->
-    <!--        app:layout_constraintVertical_bias="0.193" />-->
-
-    <!--    <Button-->
-    <!--        android:id="@+id/working_mode_button"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:text="@string/working_mode"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintHorizontal_bias="0.498"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/modeFragment"-->
-    <!--        app:layout_constraintVertical_bias="0.239" />-->
 
     <Switch
         android:id="@+id/mode_change"
@@ -63,6 +40,8 @@
         android:rotation="90"
         android:scaleX="5"
         android:scaleY="5"
+        android:trackTint="@color/white"
+        android:thumbTint="@color/accent"
         android:layout_gravity="center" />
 
     <TextView
@@ -72,7 +51,7 @@
         android:textAlignment="center"
         android:gravity="center"
         android:text="@string/switch_text_2"
-        android:textColor="@color/medium_dark_cyan"
+        android:textColor="@color/white"
         android:textSize="30sp"
         android:layout_weight="1" />
 

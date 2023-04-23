@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/faq"
-            android:textColor="@color/dark_cyan"
+            android:textColor="@color/white"
             android:textSize="40sp"
             android:textStyle="bold"
             android:textAlignment="center"
@@ -43,14 +43,14 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/gray"/>
+                android:background="@color/gray_700"/>
 
             <TextView
                 android:text="Q: What is (app name)?"
                 android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="20sp"
                 android:paddingTop="16dp"
                 android:paddingLeft="16dp"
@@ -60,7 +60,7 @@
                 android:text="A: (app name) is an android application + device combo that allows you to see data regarding your back's current condition from the device on your own android phone. It counts the number of times bad posture was detected, vibrating your phone everytime bad posture is detected for an extended period of time, reminding you to fix your posture."
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/gray"
+                android:textColor="@color/white"
                 android:textSize="15sp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"/>
@@ -68,14 +68,14 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/gray"/>
+                android:background="@color/gray_700"/>
 
             <TextView
                 android:text="Q: How does it work?"
                 android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="20sp"
                 android:paddingTop="16dp"
                 android:paddingLeft="16dp"
@@ -85,7 +85,7 @@
                 android:text="A: The device detects your posture using a gyroscope and a flex sensor, and sends the data through BLE (Bluetooth Low Energy) to your android device for it to be displayed to you in a manner that is comprehensible and actionable."
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/gray"
+                android:textColor="@color/white"
                 android:textSize="15sp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"/>
@@ -93,14 +93,14 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/gray"/>
+                android:background="@color/gray_700"/>
 
             <TextView
                 android:text="Q: How do I connect the device?"
                 android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="20sp"
                 android:paddingTop="16dp"
                 android:paddingLeft="16dp"
@@ -110,7 +110,7 @@
                 android:text="A: Ensure that your android device has both Bluetooth and Location Services on and with permissions granted to the (app name) app. Then, click the Connect/Disconnect button in the Homepage to begin device initialization."
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/gray"
+                android:textColor="@color/white"
                 android:textSize="15sp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"/>
@@ -118,24 +118,24 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/gray"/>
+                android:background="@color/gray_700"/>
 
             <TextView
                 android:text="Q: My device disconnected and can't seem to reconnect."
                 android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="20sp"
                 android:paddingTop="16dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"/>
 
             <TextView
-                android:text="A: Please restart the device by turning it off and on, then retry connection. If problems persist, restart the application as well."
+                android:text="A: Please restart the device by turning it off and on, then restart the application. Attempt to reconnect by cliking the Connect/Disconnect button afterwards."
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/gray"
+                android:textColor="@color/white"
                 android:textSize="15sp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"/>

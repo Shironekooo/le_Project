@@ -76,11 +76,18 @@ public class SettingsFragment extends Fragment {
         phoneVibrateSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sp = getActivity().getSharedPreferences("sharedData", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
                 if(phoneVibrateSwitch.isChecked()) {
+                    editor.putInt("phoneVibrate", 1);
                     v.vibrate(250);
-                    Toast.makeText(getActivity(), "Phone Vibration Turned On", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), "Phone Vibration Turned On", Toast.LENGTH_SHORT).show();
                 }
-                else Toast.makeText(getActivity(), "Phone Vibration Turned Off", Toast.LENGTH_SHORT).show();
+                else {
+                    editor.putInt("phoneVibrate", 2);
+                    //Toast.makeText(getActivity(), "Phone Vibration Turned Off", Toast.LENGTH_SHORT).show();
+                }
+                editor.commit();
             }
         });
 

@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -39,12 +40,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         sp = getSharedPreferences("sharedData", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt("mode", 1);
+        editor.putInt("phoneVibrate", 1);
         editor.putString("currentScreen", "blank");
         editor.commit();
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
+        ColorStateList colorStateList = getResources().getColorStateList(R.color.bottom_nav_icon_color);
+
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        bottomNavigationView.setItemIconTintList(colorStateList);
         bottomNavigationView.setSelectedItemId(R.id.home);
     }
     HomeFragment homeFragment = new HomeFragment();

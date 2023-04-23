@@ -4,7 +4,9 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,8 +41,8 @@ public class HomeFragment extends Fragment {
     ImageButton notificationsButton;
     ImageButton settingsButton;
 
-    Button badPostureButtonResting;
-    Button badPostureButtonWorking;
+    //Button badPostureButtonResting;
+    //Button badPostureButtonWorking;
     Button bleButton;
 
     TextView txv;
@@ -72,9 +74,14 @@ public class HomeFragment extends Fragment {
 
         SharedPreferences sp = getActivity().getSharedPreferences("sharedData", Context.MODE_PRIVATE);
         int modeSelect = sp.getInt("mode", -1);
+        int phoneVibrate = sp.getInt("phoneVibrate", -1);
         SharedPreferences.Editor editor = sp.edit();
 
         bendy = (ImageView) view.findViewById(R.id.bendy_guy);
+        txv = (TextView) view.findViewById(R.id.bad_posture_count);
+        final boolean[] incrementationOccurred = {false};
+
+        Vibrator v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 
         deviceViewModel.getConnectionState().observe(getViewLifecycleOwner(), new Observer<ConnectionState>() {
             @Override
@@ -82,21 +89,67 @@ public class HomeFragment extends Fragment {
                 Log.e("HomeFragment", "LifeCycleOnChanged");
                 if (connectionState instanceof ConnectionState.Connected) {
                     Log.e("HomeFragment", "LifeCycleOnChanged-Connected");
-                    float pitch = ((ConnectionState.Connected) connectionState).getYVal();
 
-                    if (pitch >= 0) bendy.setImageResource(R.drawable.body90);
-                    else if (pitch >= -2) bendy.setImageResource(R.drawable.body85);
-                    else if (pitch >= -4) bendy.setImageResource(R.drawable.body80);
-                    else if (pitch >= -6) bendy.setImageResource(R.drawable.body75);
-                    else if (pitch >= -8) bendy.setImageResource(R.drawable.body70);
-                    else if (pitch >= -9) bendy.setImageResource(R.drawable.body65);
-                    else if (pitch >= -10) bendy.setImageResource(R.drawable.body60);
-                    else if (pitch >= -12) bendy.setImageResource(R.drawable.body55);
-                    else if (pitch >= -14) bendy.setImageResource(R.drawable.body50);
-                    else if (pitch >= -16) bendy.setImageResource(R.drawable.body45);
+                    txv.setText(Integer.toString(badPostureCount));
+
+                    float bend = ((ConnectionState.Connected) connectionState).getYVal();
+
+                    if (bend >= 0) bendy.setImageResource(R.drawable.body90);
+                    else if (bend >= -2) bendy.setImageResource(R.drawable.body85);
+                    else if (bend >= -4) bendy.setImageResource(R.drawable.body80);
+                    else if (bend >= -6) bendy.setImageResource(R.drawable.body75);
+                    else if (bend >= -8) bendy.setImageResource(R.drawable.body70);
+                    else if (bend >= -9) bendy.setImageResource(R.drawable.body65);
+                    else if (bend >= -10) bendy.setImageResource(R.drawable.body60);
+                    else if (bend >= -12) bendy.setImageResource(R.drawable.body55);
+                    else if (bend >= -14) bendy.setImageResource(R.drawable.body50);
+                    else if (bend >= -16) bendy.setImageResource(R.drawable.body45);
                     else bendy.setImageResource(R.drawable.body40);
+
+                    int minBend, maxBend = -14;
+
+                    switch (modeSelect) {
+                        case 1:
+                            minBend = -4;
+                            break;
+                        case 2:
+                            minBend = -8;
+                            break;
+                        case -1:
+                        default:
+                            minBend = -4;
+                            Toast.makeText(getActivity(), "Error in Setting Mode", Toast.LENGTH_SHORT).show();
+                            Log.e("HomeFragment", "Mode selection failed");
+                            break;
+                    }
+                    if ((bend <= minBend) && (bend >= maxBend)) {
+                        new CountDownTimer(5000, 1000) {
+                            float currentBend = ((ConnectionState.Connected) connectionState).getYVal();
+
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                if ((currentBend >= minBend) || (currentBend <= maxBend)) cancel();
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                if ((currentBend <= minBend) && (currentBend >= maxBend) && !incrementationOccurred[0]) {
+                                    badPostureCount++;
+                                    incrementationOccurred[0] = true;
+                                    if (phoneVibrate == 1) v.vibrate(250);
+                                }
+                            }
+                        }.start();
+                    } else {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                incrementationOccurred[0] = false;
+                            }
+                        }, 5000);
+                    }
+
                 }
-                // put code to change bendy guy's image here
             }
         });
 
@@ -124,9 +177,9 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        /*
         badPostureButtonWorking = (Button) view.findViewById(R.id.bad_posture_button);
         badPostureButtonResting = (Button) view.findViewById(R.id.bad_posture_button_2);
-        txv = (TextView) view.findViewById(R.id.bad_posture_count);
 
         switch (modeSelect){
             case 1:
@@ -152,6 +205,8 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getActivity(), "Error in Setting Mode", Toast.LENGTH_SHORT).show();
                 break;
         }
+
+         */
 
         bleButton = (Button) view.findViewById(R.id.ble_scan_button);
         bleButton.setOnClickListener(new View.OnClickListener() {
