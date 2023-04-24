@@ -38,11 +38,15 @@ public class HomeFragment extends Fragment {
 
     @Inject DeviceViewModel deviceViewModel;
 
-    ImageButton notificationsButton;
+    SettingsFragment settingsFragment = new SettingsFragment();
+
+    // ImageButton notificationsButton;
     ImageButton settingsButton;
 
-    //Button badPostureButtonResting;
-    //Button badPostureButtonWorking;
+    /*
+    Button badPostureButtonResting;
+    Button badPostureButtonWorking;
+     */
     Button bleButton;
 
     TextView txv;
@@ -73,6 +77,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         SharedPreferences sp = getActivity().getSharedPreferences("sharedData", Context.MODE_PRIVATE);
+        badPostureCount = sp.getInt("badCount", 0);
         int modeSelect = sp.getInt("mode", -1);
         int phoneVibrate = sp.getInt("phoneVibrate", -1);
         SharedPreferences.Editor editor = sp.edit();
@@ -86,13 +91,11 @@ public class HomeFragment extends Fragment {
         deviceViewModel.getConnectionState().observe(getViewLifecycleOwner(), new Observer<ConnectionState>() {
             @Override
             public void onChanged(ConnectionState connectionState) {
-                Log.e("HomeFragment", "LifeCycleOnChanged");
                 if (connectionState instanceof ConnectionState.Connected) {
-                    Log.e("HomeFragment", "LifeCycleOnChanged-Connected");
-
-                    txv.setText(Integer.toString(badPostureCount));
+                    Log.e("HomeFragment", "Connected");
 
                     float bend = ((ConnectionState.Connected) connectionState).getYVal();
+                    float flex = ((ConnectionState.Connected) connectionState).getZVal();
 
                     if (bend >= 0) bendy.setImageResource(R.drawable.body90);
                     else if (bend >= -2) bendy.setImageResource(R.drawable.body85);
@@ -122,19 +125,21 @@ public class HomeFragment extends Fragment {
                             Log.e("HomeFragment", "Mode selection failed");
                             break;
                     }
-                    if ((bend <= minBend) && (bend >= maxBend)) {
+                    if (flex <= -400) {
                         new CountDownTimer(5000, 1000) {
                             float currentBend = ((ConnectionState.Connected) connectionState).getYVal();
+                            float currentFlex = ((ConnectionState.Connected) connectionState).getZVal();
 
                             @Override
                             public void onTick(long millisUntilFinished) {
-                                if ((currentBend >= minBend) || (currentBend <= maxBend)) cancel();
+                                if ((currentBend >= minBend) || (currentBend <= maxBend) || (currentFlex >= -400)) cancel();
                             }
 
                             @Override
                             public void onFinish() {
-                                if ((currentBend <= minBend) && (currentBend >= maxBend) && !incrementationOccurred[0]) {
+                                if ((((currentBend <= minBend) && (currentBend >= maxBend)) || currentFlex <= -400) && !incrementationOccurred[0]) {
                                     badPostureCount++;
+                                    editor.putInt("badCount", badPostureCount).commit();
                                     incrementationOccurred[0] = true;
                                     if (phoneVibrate == 1) v.vibrate(250);
                                 }
@@ -149,6 +154,7 @@ public class HomeFragment extends Fragment {
                         }, 5000);
                     }
 
+                    txv.setText(Integer.toString(badPostureCount));
                 }
             }
         });
@@ -160,8 +166,25 @@ public class HomeFragment extends Fragment {
                 editor.putString("currentScreen", "settings");
                 editor.commit();
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.container, new SettingsFragment());
+                fr.replace(R.id.container, settingsFragment);
                 fr.commit();
+            }
+        });
+
+        bleButton = (Button) view.findViewById(R.id.ble_scan_button);
+        bleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Uninitialized) {
+                    deviceViewModel.initializeConnection();
+                    Log.e("HomeFragment", "InitializeConnection");
+                    Toast.makeText(getActivity(), "Initializing connection", Toast.LENGTH_SHORT).show();
+                } else if (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Connected) {
+                    deviceViewModel.disconnect();
+                    Log.e("HomeFragment", "Disconnected");
+                } else if (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Disconnected) {
+                    Toast.makeText(getActivity(), "Please restart the device to reconnect", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -207,23 +230,6 @@ public class HomeFragment extends Fragment {
         }
 
          */
-
-        bleButton = (Button) view.findViewById(R.id.ble_scan_button);
-        bleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Uninitialized) {
-                    deviceViewModel.initializeConnection();
-                    Log.e("HomeFragment", "InitializeConnection");
-                    Toast.makeText(getActivity(), "Initializing connection", Toast.LENGTH_SHORT).show();
-                } else if (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Connected) {
-                    deviceViewModel.disconnect();
-                    Log.e("HomeFragment", "Disconnected");
-                } else if (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Disconnected) {
-                    Toast.makeText(getActivity(), "Please restart the device to reconnect", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
 
         return view;
     }

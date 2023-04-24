@@ -11,12 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <ImageButton
+        <!--ImageButton
             android:id="@+id/back_button"
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:background="@null"
-            android:src="@drawable/back_button" />
+            android:src="@drawable/back_button" /-->
 
         <TextView
             android:id="@+id/faqFragment"
@@ -40,13 +40,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/gray_700"/>
-
             <TextView
-                android:text="Q: What is (app name)?"
+                android:text="Q: What is PosturePerfect?"
                 android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -57,18 +52,13 @@
                 android:paddingRight="16dp"/>
 
             <TextView
-                android:text="A: (app name) is an android application + device combo that allows you to see data regarding your back's current condition from the device on your own android phone. It counts the number of times bad posture was detected, vibrating your phone everytime bad posture is detected for an extended period of time, reminding you to fix your posture."
+                android:text="A: PosturePerfect is an android application + device combo that allows you to see data regarding your back's current condition from the device on your own android phone. It counts the number of times bad posture was detected, vibrating your phone everytime bad posture is detected for an extended period of time, reminding you to fix your posture."
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textSize="15sp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/gray_700"/>
 
             <TextView
                 android:text="Q: How does it work?"
@@ -90,11 +80,6 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/gray_700"/>
-
             <TextView
                 android:text="Q: How do I connect the device?"
                 android:textStyle="bold"
@@ -115,11 +100,6 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/gray_700"/>
-
             <TextView
                 android:text="Q: My device disconnected and can't seem to reconnect."
                 android:textStyle="bold"
@@ -139,10 +119,26 @@
                 android:textSize="15sp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"/>
-            
-            <View
+
+            <TextView
+                android:text="Q: My phone can't seem to detect the device."
+                android:textStyle="bold"
                 android:layout_width="match_parent"
-                android:layout_height="200dp" />
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:paddingTop="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"/>
+
+            <TextView
+                android:text="A: This can happen if the device is low on battery. Please charge the device and try again."
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"/>
 
             <!-- Add more questions and answers here -->
 

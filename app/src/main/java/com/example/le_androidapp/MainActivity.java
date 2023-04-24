@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         sp = getSharedPreferences("sharedData", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
+        editor.putInt("badCount", 0);
         editor.putInt("mode", 1);
         editor.putInt("phoneVibrate", 1);
         editor.putString("currentScreen", "blank");

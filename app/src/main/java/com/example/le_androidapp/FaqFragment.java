@@ -33,7 +33,7 @@ public class FaqFragment extends Fragment {
 
         sp = getActivity().getSharedPreferences("sharedData", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-
+        /*
         backButton = (ImageButton) view.findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,6 +46,8 @@ public class FaqFragment extends Fragment {
                 fr.commit();
             }
         });
+
+         */
 
         return view;
     }

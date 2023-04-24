@@ -19,7 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class SettingsFragment extends Fragment {
 
-    ImageButton backButton;
+    // ImageButton backButton;
 
     Switch notificationSwitch;
     Switch phoneVibrateSwitch;
@@ -44,7 +44,7 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-
+        /*
         backButton = (ImageButton) view.findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +59,8 @@ public class SettingsFragment extends Fragment {
                 fr.commit();
             }
         });
+
+         */
 
         notificationSwitch = (Switch) view.findViewById(R.id.setting_switch1);
         notificationSwitch.setOnClickListener(new View.OnClickListener() {
