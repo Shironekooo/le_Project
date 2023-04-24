@@ -40,13 +40,8 @@ public class HomeFragment extends Fragment {
 
     SettingsFragment settingsFragment = new SettingsFragment();
 
-    // ImageButton notificationsButton;
     ImageButton settingsButton;
 
-    /*
-    Button badPostureButtonResting;
-    Button badPostureButtonWorking;
-     */
     Button bleButton;
 
     TextView txv;
@@ -94,54 +89,56 @@ public class HomeFragment extends Fragment {
                 if (connectionState instanceof ConnectionState.Connected) {
                     Log.e("HomeFragment", "Connected");
 
-                    float bend = ((ConnectionState.Connected) connectionState).getYVal();
+                    float roll = ((ConnectionState.Connected) connectionState).getYVal();
                     float flex = ((ConnectionState.Connected) connectionState).getZVal();
 
-                    if (bend >= 0) bendy.setImageResource(R.drawable.body90);
-                    else if (bend >= -2) bendy.setImageResource(R.drawable.body85);
-                    else if (bend >= -4) bendy.setImageResource(R.drawable.body80);
-                    else if (bend >= -6) bendy.setImageResource(R.drawable.body75);
-                    else if (bend >= -8) bendy.setImageResource(R.drawable.body70);
-                    else if (bend >= -9) bendy.setImageResource(R.drawable.body65);
-                    else if (bend >= -10) bendy.setImageResource(R.drawable.body60);
-                    else if (bend >= -12) bendy.setImageResource(R.drawable.body55);
-                    else if (bend >= -14) bendy.setImageResource(R.drawable.body50);
-                    else if (bend >= -16) bendy.setImageResource(R.drawable.body45);
+                    if (roll >= 0) bendy.setImageResource(R.drawable.body90);
+                    else if (roll >= -2) bendy.setImageResource(R.drawable.body85);
+                    else if (roll >= -4) bendy.setImageResource(R.drawable.body80);
+                    else if (roll >= -6) bendy.setImageResource(R.drawable.body75);
+                    else if (roll >= -8) bendy.setImageResource(R.drawable.body70);
+                    else if (roll >= -9) bendy.setImageResource(R.drawable.body65);
+                    else if (roll >= -10) bendy.setImageResource(R.drawable.body60);
+                    else if (roll >= -12) bendy.setImageResource(R.drawable.body55);
+                    else if (roll >= -14) bendy.setImageResource(R.drawable.body50);
+                    else if (roll >= -16) bendy.setImageResource(R.drawable.body45);
                     else bendy.setImageResource(R.drawable.body40);
 
-                    int minBend, maxBend = -14;
+                    int minRoll, maxRoll = -14;
 
                     switch (modeSelect) {
                         case 1:
-                            minBend = -4;
+                            minRoll = -4;
                             break;
                         case 2:
-                            minBend = -8;
+                            minRoll = -8;
                             break;
                         case -1:
                         default:
-                            minBend = -4;
+                            minRoll = -4;
                             Toast.makeText(getActivity(), "Error in Setting Mode", Toast.LENGTH_SHORT).show();
                             Log.e("HomeFragment", "Mode selection failed");
                             break;
                     }
-                    if (flex <= -400) {
+
+                    int maxFlex = -450;
+                    if (flex <= -maxFlex) {
                         new CountDownTimer(5000, 1000) {
                             float currentBend = ((ConnectionState.Connected) connectionState).getYVal();
                             float currentFlex = ((ConnectionState.Connected) connectionState).getZVal();
 
                             @Override
                             public void onTick(long millisUntilFinished) {
-                                if ((currentBend >= minBend) || (currentBend <= maxBend) || (currentFlex >= -400)) cancel();
+                                if ((currentBend >= minRoll) || (currentBend <= maxRoll) || (currentFlex >= -maxFlex)) cancel();
                             }
 
                             @Override
                             public void onFinish() {
-                                if ((((currentBend <= minBend) && (currentBend >= maxBend)) || currentFlex <= -400) && !incrementationOccurred[0]) {
+                                if ((((currentBend <= minRoll) && (currentBend >= maxRoll)) || currentFlex <= -maxFlex) && !incrementationOccurred[0]) {
                                     badPostureCount++;
                                     editor.putInt("badCount", badPostureCount).commit();
                                     incrementationOccurred[0] = true;
-                                    if (phoneVibrate == 1) v.vibrate(250);
+                                    if (phoneVibrate == 1) v.vibrate(500);
                                 }
                             }
                         }.start();
@@ -179,57 +176,19 @@ public class HomeFragment extends Fragment {
                     deviceViewModel.initializeConnection();
                     Log.e("HomeFragment", "InitializeConnection");
                     Toast.makeText(getActivity(), "Initializing connection", Toast.LENGTH_SHORT).show();
-                } else if (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Connected) {
+                } else {
+                    Toast.makeText(getActivity(), "Recalibrating", Toast.LENGTH_SHORT).show();
                     deviceViewModel.disconnect();
-                    Log.e("HomeFragment", "Disconnected");
-                } else if (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Disconnected) {
-                    Toast.makeText(getActivity(), "Please restart the device to reconnect", Toast.LENGTH_SHORT).show();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            deviceViewModel.initializeConnection();
+                        }
+                    }, 0);
+
                 }
             }
         });
-
-        /*
-        notificationsButton = (ImageButton) view.findViewById(R.id.notification_button);
-        notificationsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editor.putString("currentScreen", "notifications");
-                editor.commit();
-                FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.container, new NotificationsFragment());
-                fr.commit();
-            }
-        });
-
-        badPostureButtonWorking = (Button) view.findViewById(R.id.bad_posture_button);
-        badPostureButtonResting = (Button) view.findViewById(R.id.bad_posture_button_2);
-
-        switch (modeSelect){
-            case 1:
-                badPostureButtonWorking.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        badPostureCount++;
-                        txv.setText(Integer.toString(badPostureCount));
-                    }
-                });
-                break;
-            case 2:
-                badPostureButtonResting.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        badPostureCount++;
-                        txv.setText(Integer.toString(badPostureCount));
-                    }
-                });
-                break;
-            case -1:
-            default:
-                Toast.makeText(getActivity(), "Error in Setting Mode", Toast.LENGTH_SHORT).show();
-                break;
-        }
-
-         */
 
         return view;
     }

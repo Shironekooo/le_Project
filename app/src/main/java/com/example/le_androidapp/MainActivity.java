@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         if(bluetoothAdapter == null) {
             Toast.makeText(this, "The device does not support Bluetooth", Toast.LENGTH_SHORT).show();
-        } //else Toast.makeText(this, "Bluetooth is supported", Toast.LENGTH_SHORT).show();
+        }
 
         if(bluetoothAdapter != null && !bluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -129,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             case "overview":
             case "profile":
             case "settings":
-            case "notifications":
                 bottomNavigationView.setSelectedItemId(R.id.home);
                 editor.putString("currentScreen", "home");
                 editor.commit();

@@ -21,8 +21,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class OverviewFragment extends Fragment {
 
-    //AccelResult accelResult;
-
     @Inject DeviceViewModel deviceViewModel;
 
     TextView pitchView;
@@ -43,8 +41,8 @@ public class OverviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_overview, container, false);
 
-        pitchView = (TextView) view.findViewById(R.id.rollView);
-        rollView = (TextView) view.findViewById(R.id.pitchView);
+        pitchView = (TextView) view.findViewById(R.id.pitchView);
+        rollView = (TextView) view.findViewById(R.id.rollView);
         flexView = (TextView) view.findViewById(R.id.flexView);
 
         deviceViewModel.getConnectionState().observe(getViewLifecycleOwner(), new Observer<ConnectionState>() {

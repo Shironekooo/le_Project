@@ -19,8 +19,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class SettingsFragment extends Fragment {
 
-    // ImageButton backButton;
-
     Switch notificationSwitch;
     Switch phoneVibrateSwitch;
     Switch deviceVibrateSwitch;
@@ -44,23 +42,6 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        /*
-        backButton = (ImageButton) view.findViewById(R.id.back_button);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sp = getActivity().getSharedPreferences("sharedData", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putString("currentScreen", "home");
-                editor.commit();
-
-                fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.container, new HomeFragment());
-                fr.commit();
-            }
-        });
-
-         */
 
         notificationSwitch = (Switch) view.findViewById(R.id.setting_switch1);
         notificationSwitch.setOnClickListener(new View.OnClickListener() {
