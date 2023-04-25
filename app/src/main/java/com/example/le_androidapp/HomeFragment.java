@@ -121,7 +121,7 @@ public class HomeFragment extends Fragment {
                             break;
                     }
 
-                    int maxFlex = -450;
+                    int maxFlex = -425;
                     if (flex <= -maxFlex) {
                         new CountDownTimer(5000, 1000) {
                             float currentBend = ((ConnectionState.Connected) connectionState).getYVal();
@@ -184,7 +184,7 @@ public class HomeFragment extends Fragment {
                         public void run() {
                             deviceViewModel.initializeConnection();
                         }
-                    }, 0);
+                    }, 3000);
 
                 }
             }
