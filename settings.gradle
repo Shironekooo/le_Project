@@ -14,4 +14,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "le_androidapp"
 include ':app'
-include ':appDb'

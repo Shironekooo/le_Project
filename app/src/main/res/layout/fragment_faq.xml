@@ -85,7 +85,7 @@
                 android:paddingRight="16dp"/>
 
             <TextView
-                android:text="A: Ensure that your android device has both Bluetooth and Location Services on and with permissions granted to the (app name) app. Then, click the Connect/Disconnect button in the Homepage to begin device initialization."
+                android:text="A: Ensure that your android device has both Bluetooth and Location Services on and with permissions granted to PosturePerfect. Then, click the Connect/Calibrate button in the Homepage to begin device initialization."
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
@@ -105,7 +105,7 @@
                 android:paddingRight="16dp"/>
 
             <TextView
-                android:text="A: Please restart the device by turning it off and on, then restart the application. Attempt to reconnect by cliking the Connect/Disconnect button afterwards."
+                android:text="A: Please restart the device by turning it off and on, then restart the application. Attempt to reconnect by clicking the Connect/Calibrate button afterwards."
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
@@ -125,13 +125,17 @@
                 android:paddingRight="16dp"/>
 
             <TextView
-                android:text="A: This can happen if the device is low on battery. Please charge the device and try again."
+                android:text="A: This can happen if the device is low on battery or if the application was not given Location Permissions. Please charge the device, check if the application is permitted to access Location, and try again."
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textSize="15sp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="300dp" />
 
             <!-- Add more questions and answers here -->
 

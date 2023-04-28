@@ -22,11 +22,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 
+//import com.example.finaldb.dao.UserDao;
 import com.example.le_androidapp.data.DeviceResult;
 import com.example.le_androidapp.data.ConnectionState;
 import com.example.le_androidapp.data.DeviceReceiveManager;
 import com.example.le_androidapp.data.ble.DeviceBLEReceiveManager;
 import com.example.le_androidapp.util.Resource;
+
+//import com.example.finaldb.source.AppDatabase;
 
 import javax.inject.Inject;
 
@@ -134,7 +137,10 @@ public class HomeFragment extends Fragment {
 
                             @Override
                             public void onFinish() {
-                                if ((((currentBend <= minRoll) && (currentBend >= maxRoll)) || currentFlex <= -maxFlex) && !incrementationOccurred[0]) {
+                                float lastBend = ((ConnectionState.Connected) connectionState).getYVal();
+                                float lastFlex = ((ConnectionState.Connected) connectionState).getZVal();
+
+                                if ((((lastBend <= minRoll) && (lastBend >= maxRoll)) && lastFlex <= -maxFlex) && !incrementationOccurred[0]) {
                                     badPostureCount++;
                                     editor.putInt("badCount", badPostureCount).commit();
                                     incrementationOccurred[0] = true;
@@ -176,7 +182,7 @@ public class HomeFragment extends Fragment {
                     deviceViewModel.initializeConnection();
                     Log.e("HomeFragment", "InitializeConnection");
                     Toast.makeText(getActivity(), "Initializing connection", Toast.LENGTH_SHORT).show();
-                } else {
+                } else if ((deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Connected) || (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Disconnected)){
                     Toast.makeText(getActivity(), "Recalibrating", Toast.LENGTH_SHORT).show();
                     deviceViewModel.disconnect();
                     new Handler().postDelayed(new Runnable() {

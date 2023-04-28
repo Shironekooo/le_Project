@@ -27,7 +27,7 @@ class DeviceBLEReceiveManager @Inject constructor(
 
     private val DEVICE_NAME = "MPU6050_ESP32"
     private val SERVICE_UUID = "91bad492-b950-4226-aa2b-4ede9fa42f59"
-    private val ACCEL_CHARACTERISTIC_UUID = "cba1d469-344c-4be3-ab3f-189f80dd7518"
+    private val CHARACTERISTIC_UUID = "cba1d469-344c-4be3-ab3f-189f80dd7518"
 
 
     override val data: MutableSharedFlow<Resource<DeviceResult>> = MutableSharedFlow()
@@ -114,7 +114,7 @@ class DeviceBLEReceiveManager @Inject constructor(
         }
 
         override fun onMtuChanged(gatt: BluetoothGatt, mtu: Int, status: Int) {
-            val characteristic = findCharacteristics(SERVICE_UUID, ACCEL_CHARACTERISTIC_UUID)
+            val characteristic = findCharacteristics(SERVICE_UUID, CHARACTERISTIC_UUID)
             if(characteristic == null){
                 coroutineScope.launch {
                     data.emit(Resource.Error(errorMessage = "Could not find publisher"))
@@ -131,7 +131,7 @@ class DeviceBLEReceiveManager @Inject constructor(
 
             with(characteristic){
                 when(uuid){
-                    UUID.fromString(ACCEL_CHARACTERISTIC_UUID) -> {
+                    UUID.fromString(CHARACTERISTIC_UUID) -> {
                         val tempValHolder = characteristic.getStringValue(0)
                         val list:List<String> = listOf(*tempValHolder.split(",").toTypedArray())
                         val pitch = list.get(0).toFloat()
@@ -210,7 +210,7 @@ class DeviceBLEReceiveManager @Inject constructor(
 
     override fun closeConnection() {
         bleScanner.stopScan(scanCallback)
-        val characteristic = findCharacteristics(SERVICE_UUID, ACCEL_CHARACTERISTIC_UUID)
+        val characteristic = findCharacteristics(SERVICE_UUID, CHARACTERISTIC_UUID)
         if(characteristic != null){
             disconnectCharacteristic(characteristic)
         }
