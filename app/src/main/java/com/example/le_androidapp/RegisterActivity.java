@@ -71,7 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         uploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 Intent photoPicker = new Intent(Intent.ACTION_PICK);
                 photoPicker.setType("image/*");
                 activityResultLauncher.launch(photoPicker);
@@ -84,8 +84,6 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 saveData();
                 }
-
-
         });
 
     }
