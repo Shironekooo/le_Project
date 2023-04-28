@@ -1,7 +1,9 @@
 package com.example.le_androidapp;
 
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -178,29 +180,62 @@ public class HomeFragment extends Fragment {
         });
 
         // TODO recheck device initialization timings
+        // TODO change builder strings
         bleButton = (Button) view.findViewById(R.id.ble_scan_button);
         bleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!(deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Connected)){
+                    deviceViewModel.initializeConnection();
+                }
+                // Create popup dialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Change Title Later");
+                builder.setMessage("What do I say here");
 
-//                if (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Uninitialized) {
-//                    deviceViewModel.initializeConnection();
-//                    Log.e("HomeFragment", "InitializeConnection");
-//                    Toast.makeText(getActivity(), "Initializing connection", Toast.LENGTH_SHORT).show();
-//                } else if ((deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Connected) || (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Disconnected)){
-//                    Toast.makeText(getActivity(), "Recalibrating", Toast.LENGTH_SHORT).show();
-//                    deviceViewModel.disconnect();
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
+                // User has to click the cancel button specifically to avoid accidentally clicking away
+                builder.setCancelable(false);
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                builder.setPositiveButton("Start", null);
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+                final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                positiveButton.setEnabled(false);
+
+
+
+//                builder.setPositiveButton("Start", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        if (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Uninitialized) {
 //                            deviceViewModel.initializeConnection();
-//                        }
-//                    }, 3000);
+//                            Log.e("HomeFragment", "InitializeConnection");
+//                            Toast.makeText(getActivity(), "Initializing connection", Toast.LENGTH_SHORT).show();
+//                        } else if ((deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Connected) || (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Disconnected)){
+//                            Toast.makeText(getActivity(), "Recalibrating", Toast.LENGTH_SHORT).show();
+//                            deviceViewModel.disconnect();
+//                            new Handler().postDelayed(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    deviceViewModel.initializeConnection();
+//                                }
+//                            }, 3000);
 //
-//                }
+//                        }
+//                    }
+//                });
+//                AlertDialog dialog = builder.create();
+//                dialog.show();
             }
         });
 
         return view;
     }
+
 }

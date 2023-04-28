@@ -42,6 +42,8 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        uploadImage = findViewById(R.id.uploadImg);
+        addbtn = findViewById(R.id.addbtn);
         firstName = findViewById(R.id.userFirst);
         middleName = findViewById(R.id.userMiddle);
         lastName = findViewById(R.id.userLast);

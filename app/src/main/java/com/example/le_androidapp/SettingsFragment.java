@@ -77,7 +77,6 @@ public class SettingsFragment extends Fragment {
         exportDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "Export and Download Information", Toast.LENGTH_SHORT).show();
                 generatePDF();
             }
         });
