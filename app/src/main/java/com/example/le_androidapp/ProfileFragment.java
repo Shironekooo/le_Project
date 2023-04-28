@@ -1,6 +1,7 @@
 package com.example.le_androidapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -46,6 +47,8 @@ public class ProfileFragment extends Fragment {
         switchUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), PrimaryActivity.class);
+                startActivity(intent);
                 /*
                 editor.putString("currentScreen", "switchUser");
                 editor.commit();
@@ -55,14 +58,6 @@ public class ProfileFragment extends Fragment {
                 fr.commit();
 
                  */
-            }
-        });
-
-        logout = (Button) view.findViewById(R.id.logout);
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getActivity(), "To Logout", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -43,7 +43,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
         holder.recCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context,HomeFragment.class);
+                Intent intent = new Intent(context, MainActivity.class);
+                intent.putExtra("Image", userList.get(holder.getAdapterPosition()).getDataImage());
+                intent.putExtra("First Name", userList.get(holder.getAdapterPosition()).getFirstName());
+                intent.putExtra("Last Name", userList.get(holder.getAdapterPosition()).getLastName());
                 context.startActivity(intent);
             }
         });
@@ -51,7 +54,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     @Override
     public int getItemCount() {
-        return 0;
+        return userList.size();
     }
 }
 

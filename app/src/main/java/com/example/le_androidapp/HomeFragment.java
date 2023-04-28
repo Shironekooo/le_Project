@@ -211,15 +211,17 @@ public class HomeFragment extends Fragment {
                 }
                 // Create popup dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Change Title Later");
-                builder.setMessage("What do I say here");
+                builder.setTitle("Calibration");
+                builder.setMessage("Note that the device needs to be calibrated before use." +
+                        "The device will be calibrated in a few seconds." +
+                        "If the device is not calibrated, data will be inaccurate.");
 
                 // User has to click the cancel button specifically to avoid accidentally clicking away
                 builder.setCancelable(false);
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Cancelled. Device not calibrated.", Toast.LENGTH_SHORT).show();
                     }
                 });
 
