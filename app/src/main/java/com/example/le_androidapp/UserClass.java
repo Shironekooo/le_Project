@@ -13,6 +13,10 @@ public class UserClass {
 
     private String dataImage;
 
+    public UserClass() {
+        // Required empty constructor for Firebase Realtime Database.
+    }
+
     /*public Integer getUserId() {
         return userId;
     }*/
