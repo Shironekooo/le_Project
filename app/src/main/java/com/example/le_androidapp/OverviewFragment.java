@@ -18,6 +18,9 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
+
+// TODO change to be able to show history or actionable data not raw data
+
 @AndroidEntryPoint
 public class OverviewFragment extends Fragment {
 

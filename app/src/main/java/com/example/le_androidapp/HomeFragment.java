@@ -61,6 +61,7 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Displays badPostureCount upon HomeFragment switch
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -74,6 +75,7 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        // SharedPreferences initialization for HomeFragment
         SharedPreferences sp = getActivity().getSharedPreferences("sharedData", Context.MODE_PRIVATE);
         badPostureCount = sp.getInt("badCount", 0);
         int modeSelect = sp.getInt("mode", -1);
@@ -86,6 +88,7 @@ public class HomeFragment extends Fragment {
 
         Vibrator v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 
+        // TODO change this ASAP
         deviceViewModel.getConnectionState().observe(getViewLifecycleOwner(), new Observer<ConnectionState>() {
             @Override
             public void onChanged(ConnectionState connectionState) {
@@ -174,25 +177,27 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        // TODO recheck device initialization timings
         bleButton = (Button) view.findViewById(R.id.ble_scan_button);
         bleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Uninitialized) {
-                    deviceViewModel.initializeConnection();
-                    Log.e("HomeFragment", "InitializeConnection");
-                    Toast.makeText(getActivity(), "Initializing connection", Toast.LENGTH_SHORT).show();
-                } else if ((deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Connected) || (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Disconnected)){
-                    Toast.makeText(getActivity(), "Recalibrating", Toast.LENGTH_SHORT).show();
-                    deviceViewModel.disconnect();
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            deviceViewModel.initializeConnection();
-                        }
-                    }, 3000);
 
-                }
+//                if (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Uninitialized) {
+//                    deviceViewModel.initializeConnection();
+//                    Log.e("HomeFragment", "InitializeConnection");
+//                    Toast.makeText(getActivity(), "Initializing connection", Toast.LENGTH_SHORT).show();
+//                } else if ((deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Connected) || (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Disconnected)){
+//                    Toast.makeText(getActivity(), "Recalibrating", Toast.LENGTH_SHORT).show();
+//                    deviceViewModel.disconnect();
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            deviceViewModel.initializeConnection();
+//                        }
+//                    }, 3000);
+//
+//                }
             }
         });
 

@@ -41,6 +41,7 @@ public class ModeFragment extends Fragment {
         sp = getActivity().getSharedPreferences("sharedData", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
 
+        // Switch for mode selection
         modeSwitch = (Switch) view.findViewById(R.id.mode_change);
         modeSwitch.setOnClickListener(new View.OnClickListener() {
             @Override

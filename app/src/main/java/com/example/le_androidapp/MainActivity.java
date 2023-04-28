@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // SharedPreferences initialization
         sp = getSharedPreferences("sharedData", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt("badCount", 0);
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         editor.putString("currentScreen", "blank");
         editor.commit();
 
+        // Bottom Navigation View initialization and color setting
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
         ColorStateList colorStateList = getResources().getColorStateList(R.color.bottom_nav_icon_color);
@@ -53,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         bottomNavigationView.setItemIconTintList(colorStateList);
         bottomNavigationView.setSelectedItemId(R.id.home);
     }
+
+    // Creation of fragments to avoid fragment destruction during fragment replacement
     HomeFragment homeFragment = new HomeFragment();
     ArticlesFragment articlesFragment = new ArticlesFragment();
     ModeFragment modeFragment = new ModeFragment();
@@ -65,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         sp = getSharedPreferences("sharedData", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
 
+        // Bottom Navigation View Fragment Transactions
         switch(item.getItemId()) {
             case R.id.home:
                 editor.putString("currentScreen", "home");
@@ -103,10 +108,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected void onResume() {
         super.onResume();
 
+        // Check for Bluetooth capabilities
         if(bluetoothAdapter == null) {
             Toast.makeText(this, "The device does not support Bluetooth", Toast.LENGTH_SHORT).show();
         }
 
+        // Request Bluetooth enabling
         if(bluetoothAdapter != null && !bluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 
@@ -116,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
     }
 
+    // Fixes back button usage for all fragments rather than immediate app closure
     @Override
     public void onBackPressed() {
 
