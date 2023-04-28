@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/gray_700"
+    tools:context=".RegisterActivity"
+    tools:ignore="ScrollViewCount">
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="20dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Profile"
+            android:textSize="25sp"
+            android:textAllCaps="true"
+            android:paddingBottom="100dp"
+            android:textStyle="bold"
+            android:textColor="@color/purple_500"
+            android:layout_gravity="center_horizontal"
+            android:padding="15dp"
+            tools:ignore="HardcodedText" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:padding="20dp">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:id="@+id/userFirst"
+                android:hint="First Name"
+                android:textSize="20sp"
+                android:padding="16dp"
+                android:gravity="start|center_vertical"
+                android:textColor="@color/black"
+                tools:ignore="HardcodedText,TextFields"
+                android:autofillHints="" />
+
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:id="@+id/userMiddle"
+                android:hint="Middle Name"
+                android:textSize="20sp"
+                android:padding="16dp"
+                android:gravity="start|center_vertical"
+                android:textColor="@color/black"
+                tools:ignore="Autofill,HardcodedText,TextFields"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:id="@+id/userLast"
+                android:hint="Last Name"
+                android:textSize="20sp"
+                android:padding="16dp"
+                android:gravity="start|center_vertical"
+                android:textColor="@color/black"
+                tools:ignore="Autofill,HardcodedText,TextFields"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:id="@+id/userAge"
+                android:hint="Age"
+                android:textSize="20sp"
+                android:padding="16dp"
+                android:gravity="start|center_vertical"
+                android:textColor="@color/black"
+                tools:ignore="Autofill,HardcodedText,TextFields"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Gender"
+                    android:id="@+id/genderText"
+                    android:textSize="19sp"
+                    android:textColor="@android:color/black"
+                    android:padding="5dp"
+                    tools:ignore="HardcodedText" />
+
+                <RadioGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Gender"
+                    android:id="@+id/groupGender"
+                    android:layout_alignBottom="@id/genderText"
+                    android:layout_toEndOf="@id/genderText"
+                    android:orientation="horizontal"
+                    tools:ignore="HardcodedText">
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Female"
+                        android:textSize="18sp"
+                        tools:ignore="HardcodedText"
+                        android:id="@+id/female"/>
+
+                    <RadioButton
+                        android:id="@+id/male"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:text="Male"
+                        android:textSize="18sp"
+                        tools:ignore="HardcodedText,TouchTargetSizeCheck" />
+
+                </RadioGroup>
+            </RelativeLayout>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:id="@+id/contactNumber"
+                android:hint="Contact Number"
+                android:textSize="20sp"
+                android:padding="16dp"
+                android:gravity="start|center_vertical"
+                android:textColor="@color/black"
+                tools:ignore="Autofill,HardcodedText,TextFields"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:id="@+id/userEmail"
+                android:hint="Email"
+                android:textSize="20sp"
+                android:padding="16dp"
+                android:gravity="start|center_vertical"
+                android:textColor="@color/black"
+                tools:ignore="Autofill,HardcodedText,TextFields"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:id="@+id/userPass"
+                android:hint="Password"
+                android:textSize="20sp"
+                android:padding="16dp"
+                android:gravity="start|center_vertical"
+                android:textColor="@color/black"
+                tools:ignore="Autofill,HardcodedText,TextFields"/>
+
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Register"
+                android:layout_gravity="center"
+                app:cornerRadius = "20dp"
+                android:id="@+id/addbtn"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
+
+</ScrollView>
