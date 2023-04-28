@@ -33,6 +33,9 @@ import com.example.le_androidapp.util.Resource;
 
 //import com.example.finaldb.source.AppDatabase;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -54,6 +57,12 @@ public class HomeFragment extends Fragment {
     ImageView bendy;
 
     private int badPostureCount = 0;
+
+    private int calibrateIncrement = 0;
+    private int calibratedBend = 0;
+    private boolean calibrationDone = false;
+    private int currentCalibrate = 0;
+    final private int reqCalibrate = 100;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -97,73 +106,83 @@ public class HomeFragment extends Fragment {
                 if (connectionState instanceof ConnectionState.Connected) {
                     Log.e("HomeFragment", "Connected");
 
+
                     float roll = ((ConnectionState.Connected) connectionState).getYVal();
                     float flex = ((ConnectionState.Connected) connectionState).getZVal();
 
-                    if (roll >= 0) bendy.setImageResource(R.drawable.body90);
-                    else if (roll >= -2) bendy.setImageResource(R.drawable.body85);
-                    else if (roll >= -4) bendy.setImageResource(R.drawable.body80);
-                    else if (roll >= -6) bendy.setImageResource(R.drawable.body75);
-                    else if (roll >= -8) bendy.setImageResource(R.drawable.body70);
-                    else if (roll >= -9) bendy.setImageResource(R.drawable.body65);
-                    else if (roll >= -10) bendy.setImageResource(R.drawable.body60);
-                    else if (roll >= -12) bendy.setImageResource(R.drawable.body55);
-                    else if (roll >= -14) bendy.setImageResource(R.drawable.body50);
-                    else if (roll >= -16) bendy.setImageResource(R.drawable.body45);
-                    else bendy.setImageResource(R.drawable.body40);
-
-                    int minRoll, maxRoll = -14;
-
-                    switch (modeSelect) {
-                        case 1:
-                            minRoll = -4;
-                            break;
-                        case 2:
-                            minRoll = -8;
-                            break;
-                        case -1:
-                        default:
-                            minRoll = -4;
-                            Toast.makeText(getActivity(), "Error in Setting Mode", Toast.LENGTH_SHORT).show();
-                            Log.e("HomeFragment", "Mode selection failed");
-                            break;
-                    }
-
-                    int maxFlex = -425;
-                    if (flex <= -maxFlex) {
-                        new CountDownTimer(5000, 1000) {
-                            float currentBend = ((ConnectionState.Connected) connectionState).getYVal();
-                            float currentFlex = ((ConnectionState.Connected) connectionState).getZVal();
-
-                            @Override
-                            public void onTick(long millisUntilFinished) {
-                                if ((currentBend >= minRoll) || (currentBend <= maxRoll) || (currentFlex >= -maxFlex)) cancel();
-                            }
-
-                            @Override
-                            public void onFinish() {
-                                float lastBend = ((ConnectionState.Connected) connectionState).getYVal();
-                                float lastFlex = ((ConnectionState.Connected) connectionState).getZVal();
-
-                                if ((((lastBend <= minRoll) && (lastBend >= maxRoll)) && lastFlex <= -maxFlex) && !incrementationOccurred[0]) {
-                                    badPostureCount++;
-                                    editor.putInt("badCount", badPostureCount).commit();
-                                    incrementationOccurred[0] = true;
-                                    if (phoneVibrate == 1) v.vibrate(500);
-                                }
-                            }
-                        }.start();
+                    if (!calibrationDone) {
+                        calibrateIncrement += roll;
+                        currentCalibrate += 1;
+                        if (currentCalibrate == reqCalibrate){
+                            calibrationDone = true;
+                            calibratedBend = calibrateIncrement / reqCalibrate;
+                        }
                     } else {
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                incrementationOccurred[0] = false;
-                            }
-                        }, 5000);
+//                        if (roll >= 0) bendy.setImageResource(R.drawable.body90);
+//                        else if (roll >= -2) bendy.setImageResource(R.drawable.body85);
+//                        else if (roll >= -4) bendy.setImageResource(R.drawable.body80);
+//                        else if (roll >= -6) bendy.setImageResource(R.drawable.body75);
+//                        else if (roll >= -8) bendy.setImageResource(R.drawable.body70);
+//                        else if (roll >= -9) bendy.setImageResource(R.drawable.body65);
+//                        else if (roll >= -10) bendy.setImageResource(R.drawable.body60);
+//                        else if (roll >= -12) bendy.setImageResource(R.drawable.body55);
+//                        else if (roll >= -14) bendy.setImageResource(R.drawable.body50);
+//                        else if (roll >= -16) bendy.setImageResource(R.drawable.body45);
+//                        else bendy.setImageResource(R.drawable.body40);
+//
+//                        int minRoll, maxRoll = -14;
+//
+//                        switch (modeSelect) {
+//                            case 1:
+//                                minRoll = -4;
+//                                break;
+//                            case 2:
+//                                minRoll = -8;
+//                                break;
+//                            case -1:
+//                            default:
+//                                minRoll = -4;
+//                                Toast.makeText(getActivity(), "Error in Setting Mode", Toast.LENGTH_SHORT).show();
+//                                Log.e("HomeFragment", "Mode selection failed");
+//                                break;
+//                        }
+//
+//                        int maxFlex = -425;
+//                        if (flex <= -maxFlex) {
+//                            new CountDownTimer(5000, 1000) {
+//                                float currentBend = ((ConnectionState.Connected) connectionState).getYVal();
+//                                float currentFlex = ((ConnectionState.Connected) connectionState).getZVal();
+//
+//                                @Override
+//                                public void onTick(long millisUntilFinished) {
+//                                    if ((currentBend >= minRoll) || (currentBend <= maxRoll) || (currentFlex >= -maxFlex)) cancel();
+//                                }
+//
+//                                @Override
+//                                public void onFinish() {
+//                                    float lastBend = ((ConnectionState.Connected) connectionState).getYVal();
+//                                    float lastFlex = ((ConnectionState.Connected) connectionState).getZVal();
+//
+//                                    if ((((lastBend <= minRoll) && (lastBend >= maxRoll)) && lastFlex <= -maxFlex) && !incrementationOccurred[0]) {
+//                                        badPostureCount++;
+//                                        editor.putInt("badCount", badPostureCount).commit();
+//                                        incrementationOccurred[0] = true;
+//                                        if (phoneVibrate == 1) v.vibrate(500);
+//                                    }
+//                                }
+//                            }.start();
+//                        } else {
+//                            new Handler().postDelayed(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    incrementationOccurred[0] = false;
+//                                }
+//                            }, 5000);
+//                        }
+//
+//                        txv.setText(Integer.toString(badPostureCount));
                     }
-
-                    txv.setText(Integer.toString(badPostureCount));
-                }
+                    }
             }
         });
 
@@ -185,6 +204,8 @@ public class HomeFragment extends Fragment {
         bleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                currentCalibrate = 0;
+                calibrateIncrement = 0;
                 if (!(deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Connected)){
                     deviceViewModel.initializeConnection();
                 }
@@ -208,8 +229,22 @@ public class HomeFragment extends Fragment {
                 final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
                 positiveButton.setEnabled(false);
 
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (calibrationDone) {
+                            positiveButton.setEnabled(true);
+                        }
+                    }
+                }, 0, 1000);
 
-
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getActivity(), "Success!", Toast.LENGTH_SHORT).show();
+                    }
+                });
 //                builder.setPositiveButton("Start", new DialogInterface.OnClickListener() {
 //                    @Override
 //                    public void onClick(DialogInterface dialog, int which) {
