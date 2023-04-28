@@ -25,37 +25,11 @@
             android:layout_centerVertical="true"/>
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_marginTop="50dp"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_weight="1">
-
-        <TextView
-            android:id="@+id/setting1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="50dp"
-            android:textSize="25sp"
-            android:layout_weight="2"
-            android:text="Notifications" />
-
-        <Switch
-            android:id="@+id/setting_switch1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="80dp"
-            android:layout_marginBottom="20dp"
-            android:scaleX="2"
-            android:scaleY="2"
-            android:checked="true"
-            android:trackTint="@color/white"
-            android:thumbTint="@color/accent"
-            android:layout_weight="1" />
-    </LinearLayout>
+        android:layout_height="0dp"
+        android:layout_weight="4">
+    </View>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -88,41 +62,10 @@
             android:layout_weight="1" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_weight="1">
-
-        <TextView
-            android:id="@+id/setting3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="50dp"
-            android:textSize="25sp"
-            android:layout_weight="2"
-            android:text="Device Vibrate" />
-
-        <Switch
-            android:id="@+id/setting_switch3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="80dp"
-            android:layout_marginBottom="20dp"
-            android:scaleX="2"
-            android:scaleY="2"
-            android:checked="true"
-            android:trackTint="@color/white"
-            android:thumbTint="@color/accent"
-            android:layout_weight="1" />
-    </LinearLayout>
-
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2">
+        android:layout_weight="3">
     </View>
 
     <LinearLayout
@@ -153,7 +96,7 @@
         android:id="@+id/dev_support"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         android:layout_marginLeft="75dp"
         android:layout_marginRight="75dp"
         android:text="Support the Developers!"

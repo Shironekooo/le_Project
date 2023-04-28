@@ -19,15 +19,12 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class SettingsFragment extends Fragment {
 
-    Switch notificationSwitch;
     Switch phoneVibrateSwitch;
-    Switch deviceVibrateSwitch;
 
     Button exportDownload;
     Button supportDevs;
 
     SharedPreferences sp;
-    FragmentTransaction fr;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -42,16 +39,6 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-
-        notificationSwitch = (Switch) view.findViewById(R.id.setting_switch1);
-        notificationSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(notificationSwitch.isChecked())
-                    Toast.makeText(getActivity(), "Notifications Turned On", Toast.LENGTH_SHORT).show();
-                else Toast.makeText(getActivity(), "Notifications Turned Off", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         Vibrator v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -71,16 +58,6 @@ public class SettingsFragment extends Fragment {
                     //Toast.makeText(getActivity(), "Phone Vibration Turned Off", Toast.LENGTH_SHORT).show();
                 }
                 editor.commit();
-            }
-        });
-
-        deviceVibrateSwitch = (Switch) view.findViewById(R.id.setting_switch3);
-        deviceVibrateSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(deviceVibrateSwitch.isChecked())
-                    Toast.makeText(getActivity(), "Device Vibration Turned On", Toast.LENGTH_SHORT).show();
-                else Toast.makeText(getActivity(), "Device Vibration Turned Off", Toast.LENGTH_SHORT).show();
             }
         });
 
