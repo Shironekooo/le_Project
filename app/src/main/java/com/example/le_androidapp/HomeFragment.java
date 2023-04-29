@@ -213,8 +213,8 @@ public class HomeFragment extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Calibration");
                 builder.setMessage("Note that the device needs to be calibrated before use." +
-                        "The device will be calibrated in a few seconds." +
-                        "If the device is not calibrated, data will be inaccurate.");
+                        " The device will be calibrated in a few seconds." +
+                        " If the device is not calibrated, data will be inaccurate.");
 
                 // User has to click the cancel button specifically to avoid accidentally clicking away
                 builder.setCancelable(false);
@@ -222,6 +222,7 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(getActivity(), "Cancelled. Device not calibrated.", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
                     }
                 });
 
@@ -231,13 +232,29 @@ public class HomeFragment extends Fragment {
                 final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
                 positiveButton.setEnabled(false);
 
+                final int[] sampleCount = {0};
+
                 Timer timer = new Timer();
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        if (calibrationDone) {
-                            positiveButton.setEnabled(true);
+                        sampleCount[0]++;
+                        if(sampleCount[0] == 3) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    positiveButton.setEnabled(true);
+                                }
+                            });
                         }
+//                        if (calibrationDone) {
+//                            getActivity().runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    positiveButton.setEnabled(true);
+//                                }
+//                            });
+//                        }
                     }
                 }, 0, 1000);
 
@@ -245,6 +262,7 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(getActivity(), "Success!", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
                     }
                 });
 //                builder.setPositiveButton("Start", new DialogInterface.OnClickListener() {
