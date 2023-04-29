@@ -17,8 +17,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
+
+import com.example.le_androidapp.tables.UserClass;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,6 +38,8 @@ public class RegisterActivity extends AppCompatActivity {
     String imageURL;
     Button addbtn;
     EditText firstName, middleName, lastName, userAge, contactNumber, userEmail, userPass;
+    RadioGroup genderRadioGroup;
+    RadioButton radioButtonFemale, radioButtonMale;
     Uri uri;
 
     @SuppressLint("MissingInflatedId")
@@ -51,6 +57,28 @@ public class RegisterActivity extends AppCompatActivity {
         contactNumber = findViewById(R.id.contactNumber);
         userEmail = findViewById(R.id.userEmail);
         userPass = findViewById(R.id.userPass);
+        radioButtonFemale = findViewById(R.id.female);
+        radioButtonMale = findViewById(R.id.male);
+
+        genderRadioGroup = findViewById(R.id.groupGender);
+        genderRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @SuppressLint("NonConstantResourceId")
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                switch (checkedId) {
+                    case R.id.female:
+                        // Female option is selected
+                        break;
+                    case R.id.male:
+                        // Male option is selected
+                        break;
+                    default:
+                        // No option is selected
+                        break;
+                }
+            }
+        });
+
 
         ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -83,7 +111,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 saveData();
-                }
+            }
         });
 
     }
@@ -120,15 +148,19 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void uploadData(){
 
+
         String firstN = firstName.getText().toString();
         String middleN = middleName.getText().toString();
         String lastN = lastName.getText().toString();
         String age = userAge.getText().toString();
+        String gender = genderRadioGroup.toString();
         String contactNo = contactNumber.getText().toString();
         String email = userEmail.getText().toString();
         String pass = userPass.getText().toString();
 
-        UserClass userClass = new UserClass(firstN, middleN, lastN, age,contactNo,email,pass,imageURL);
+        String userId = FirebaseDatabase.getInstance().getReference("User Data").push().getKey();
+        UserClass userClass = new UserClass(userId, firstN, middleN, lastN, age, gender, contactNo, email, pass, imageURL);
+
 
         FirebaseDatabase.getInstance().getReference("User Data").child(lastN)
                 .setValue(userClass).addOnCompleteListener(new OnCompleteListener<Void>() {

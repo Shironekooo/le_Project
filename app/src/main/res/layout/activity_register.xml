@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="30dp"
         app:cardElevation="20dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp">
 
@@ -32,14 +32,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Upload Photo"
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@color/purple_500"
                 android:layout_gravity="center_horizontal"
                 tools:ignore="HardcodedText" />
 
             <ImageView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="150dp"
                 android:layout_marginTop="10dp"
                 android:src="@drawable/uploadimg"
@@ -89,9 +89,47 @@
                 android:textSize="20sp"
                 android:padding="16dp"
                 android:gravity="start|center_vertical"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 tools:ignore="Autofill,HardcodedText,TextFields"/>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Gender"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:gravity="center_vertical" />
+
+                <RadioGroup
+                    android:id="@+id/groupGender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/female"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Female"
+                        android:textColor="@color/white" />
+
+                    <RadioButton
+                        android:id="@+id/male"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Male"
+                        android:textColor="@color/white" />
+
+                </RadioGroup>
+
+            </LinearLayout>
 
             <EditText
                 android:layout_width="match_parent"
@@ -101,7 +139,7 @@
                 android:textSize="20sp"
                 android:padding="16dp"
                 android:gravity="start|center_vertical"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 tools:ignore="Autofill,HardcodedText,TextFields"/>
 
             <EditText
@@ -112,7 +150,7 @@
                 android:textSize="20sp"
                 android:padding="16dp"
                 android:gravity="start|center_vertical"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 tools:ignore="Autofill,HardcodedText,TextFields"/>
 
             <EditText
@@ -123,7 +161,7 @@
                 android:textSize="20sp"
                 android:padding="16dp"
                 android:gravity="start|center_vertical"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 tools:ignore="Autofill,HardcodedText,TextFields"/>
 
 
