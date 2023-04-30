@@ -3,20 +3,16 @@ package com.example.le_androidapp.tables;
 public class Mode {
     public String modeId;
     private String userId;
-    public Boolean restingMode;
-    public Boolean workingMode;
+    public Boolean isWorkingMode;
 
     public String getModeId() {
         return modeId;
     }
 
-    public Boolean getRestingMode() {
-        return restingMode;
+    public Boolean getIsWorkingMode() {
+        return isWorkingMode;
     }
 
-    public Boolean getWorkingMode() {
-        return workingMode;
-    }
 
     public String getUserId() {
         return userId;
@@ -26,10 +22,9 @@ public class Mode {
         this.userId = userId;
     }
 
-    public Mode(String userId, String modeId, Boolean restingMode, Boolean workingMode) {
+    public Mode(String userId, String modeId, Boolean isWorkingMode) {
         this.modeId = modeId;
-        this.restingMode = restingMode;
-        this.workingMode = workingMode;
+        this.isWorkingMode = isWorkingMode;
         this.userId = userId;
     }
 }

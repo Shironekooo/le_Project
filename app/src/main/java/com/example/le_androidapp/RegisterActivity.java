@@ -38,7 +38,7 @@ import java.util.Date;
 public class RegisterActivity extends AppCompatActivity {
 
     ImageView uploadImage;
-    String imageURL;
+    String imageURL, selectedGender;
     Button addbtn;
     EditText firstName, middleName, lastName, userAge, contactNumber;
     RadioGroup genderRadioGroup;
@@ -71,9 +71,11 @@ public class RegisterActivity extends AppCompatActivity {
                 switch (checkedId) {
                     case R.id.female:
                         // Female option is selected
+                        selectedGender = "female";
                         break;
                     case R.id.male:
                         // Male option is selected
+                        selectedGender = "male";
                         break;
                     default:
                         // No option is selected
@@ -156,11 +158,11 @@ public class RegisterActivity extends AppCompatActivity {
         String middleN = middleName.getText().toString();
         String lastN = lastName.getText().toString();
         String age = userAge.getText().toString();
-        String gender = genderRadioGroup.toString();
+        //String gender = genderRadioGroup.toString();
         String contactNo = contactNumber.getText().toString();
 
 
-        FirebaseDatabase.getInstance().getReference("User Data").child(lastN).setValue(new UserClass(id, firstN, middleN, lastN, age, gender, contactNo, imageURL))
+        FirebaseDatabase.getInstance().getReference("User Data").child(lastN).setValue(new UserClass(id, firstN, middleN, lastN, age, selectedGender, contactNo, imageURL))
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {

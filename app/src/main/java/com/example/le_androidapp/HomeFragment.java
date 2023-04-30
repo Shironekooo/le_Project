@@ -32,6 +32,8 @@ import com.example.le_androidapp.data.ConnectionState;
 import com.example.le_androidapp.data.DeviceReceiveManager;
 import com.example.le_androidapp.data.ble.DeviceBLEReceiveManager;
 import com.example.le_androidapp.util.Resource;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 //import com.example.finaldb.source.AppDatabase;
 
