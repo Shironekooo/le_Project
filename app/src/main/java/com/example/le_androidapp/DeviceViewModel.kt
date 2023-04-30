@@ -46,7 +46,6 @@ class DeviceViewModel @Inject constructor(
                     is Resource.Success -> {
                         _connectionState.value = result.data.connectionState
                         pitch = result.data.pitch
-                        roll = result.data.roll
                         flex = result.data.flex
                     }
 

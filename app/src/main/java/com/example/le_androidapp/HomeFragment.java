@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
@@ -56,13 +58,22 @@ public class HomeFragment extends Fragment {
 
     ImageView bendy;
 
+    private Handler handler;
+    private Runnable runnable;
+    private Timer timer;
+
+    private View view;
+
     private int badPostureCount = 0;
 
-    private int calibrateIncrement = 0;
-    private int calibratedBend = 0;
+    private float calibrateIncrement = 0;
+    private float calibratedBend = 0;
     private boolean calibrationDone = false;
     private int currentCalibrate = 0;
     final private int reqCalibrate = 100;
+
+    private boolean active = false;
+    private boolean alertClicked = false;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -84,7 +95,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        view = inflater.inflate(R.layout.fragment_home, container, false);
 
         // SharedPreferences initialization for HomeFragment
         SharedPreferences sp = getActivity().getSharedPreferences("sharedData", Context.MODE_PRIVATE);
@@ -104,20 +115,28 @@ public class HomeFragment extends Fragment {
             @Override
             public void onChanged(ConnectionState connectionState) {
                 if (connectionState instanceof ConnectionState.Connected) {
-                    Log.e("HomeFragment", "Connected");
+                    //Log.e("HomeFragment", "Connected");
 
 
-                    float roll = ((ConnectionState.Connected) connectionState).getYVal();
-                    float flex = ((ConnectionState.Connected) connectionState).getZVal();
+                    float pitch = ((ConnectionState.Connected) connectionState).getPitch();
+                    float flex = ((ConnectionState.Connected) connectionState).getFlex();
 
                     if (!calibrationDone) {
-                        calibrateIncrement += roll;
+                        calibrateIncrement += pitch;
                         currentCalibrate += 1;
+                        Log.e("Calibration", "Increment = " + calibrateIncrement +
+                                "; Current = " + currentCalibrate);
                         if (currentCalibrate == reqCalibrate){
                             calibrationDone = true;
+                            alertClicked = false;
                             calibratedBend = calibrateIncrement / reqCalibrate;
+                            Log.e("Calibration", "Done: " + calibrationDone +
+                                    "; Calibrated Bend = " + calibratedBend);
                         }
-                    } else {
+                    }
+
+                    if (active) {
+                        Toast.makeText(getActivity(), "device actively working", Toast.LENGTH_SHORT).show();
 //                        if (roll >= 0) bendy.setImageResource(R.drawable.body90);
 //                        else if (roll >= -2) bendy.setImageResource(R.drawable.body85);
 //                        else if (roll >= -4) bendy.setImageResource(R.drawable.body80);
@@ -204,17 +223,37 @@ public class HomeFragment extends Fragment {
         bleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                active = false;
+                alertClicked = true;
                 currentCalibrate = 0;
                 calibrateIncrement = 0;
                 if (!(deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Connected)){
                     deviceViewModel.initializeConnection();
+                    calibrationDone = false;
+                } else if (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Connected) {
+                    deviceViewModel.disconnect();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            deviceViewModel.initializeConnection();
+                            calibrationDone = false;
+                        }
+                    }, 3000);
                 }
+
+                String[] messages = {"Note that the device needs to be calibrated before use.",
+                        " The device will be calibrated in a few seconds.",
+                        " If the device is not calibrated, data will be inaccurate."};
+                String alertMessage = "<ul>";
+                for (String message: messages) {
+                    alertMessage += "<li>" + message + "</li>";
+                }
+                alertMessage += "</ul>";
+
                 // Create popup dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Calibration");
-                builder.setMessage("Note that the device needs to be calibrated before use." +
-                        " The device will be calibrated in a few seconds." +
-                        " If the device is not calibrated, data will be inaccurate.");
+                builder.setMessage(HtmlCompat.fromHtml(alertMessage, HtmlCompat.FROM_HTML_MODE_LEGACY));
 
                 // User has to click the cancel button specifically to avoid accidentally clicking away
                 builder.setCancelable(false);
@@ -234,27 +273,23 @@ public class HomeFragment extends Fragment {
 
                 final int[] sampleCount = {0};
 
-                Timer timer = new Timer();
+                handler = new Handler(Looper.getMainLooper());
+                runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        positiveButton.setEnabled(true);
+                    }
+                };
+
+                timer = new Timer();
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        sampleCount[0]++;
-                        if(sampleCount[0] == 3) {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    positiveButton.setEnabled(true);
-                                }
-                            });
+                        if (calibrationDone && !alertClicked
+                                && positiveButton != null && runnable != null
+                                && isAdded() && getActivity() != null) {
+                            getActivity().runOnUiThread(runnable);
                         }
-//                        if (calibrationDone) {
-//                            getActivity().runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    positiveButton.setEnabled(true);
-//                                }
-//                            });
-//                        }
                     }
                 }, 0, 1000);
 
@@ -262,6 +297,7 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(getActivity(), "Success!", Toast.LENGTH_SHORT).show();
+                        active = true;
                         dialog.dismiss();
                     }
                 });
@@ -293,4 +329,19 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (timer != null) timer.cancel();
+        if (handler != null) handler.removeCallbacks(runnable);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        if (timer != null) timer.cancel();
+        if (handler != null) handler.removeCallbacks(runnable);
+    }
 }

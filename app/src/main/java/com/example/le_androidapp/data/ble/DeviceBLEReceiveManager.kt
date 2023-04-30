@@ -77,7 +77,7 @@ class DeviceBLEReceiveManager @Inject constructor(
                     this@DeviceBLEReceiveManager.gatt = gatt
                 } else if(newState == BluetoothProfile.STATE_DISCONNECTED){
                     coroutineScope.launch {
-                        data.emit(Resource.Success(data = DeviceResult(0f, 0f, 0f, ConnectionState.Disconnected)))
+                        data.emit(Resource.Success(data = DeviceResult(0f, 0f, ConnectionState.Disconnected)))
                     }
                     gatt.close()
                 }
@@ -135,14 +135,12 @@ class DeviceBLEReceiveManager @Inject constructor(
                         val tempValHolder = characteristic.getStringValue(0)
                         val list:List<String> = listOf(*tempValHolder.split(",").toTypedArray())
                         val pitch = list.get(0).toFloat()
-                        val roll = list.get(1).toFloat()
-                        val flex = list.get(2).toFloat()
+                        val flex = list.get(1).toFloat()
 
                         val accelCharas = DeviceResult(
                             pitch,
-                            roll,
                             flex,
-                            ConnectionState.Connected(pitch, roll, flex)
+                            ConnectionState.Connected(pitch, flex)
                         )
                         coroutineScope.launch {
                             data.emit(
