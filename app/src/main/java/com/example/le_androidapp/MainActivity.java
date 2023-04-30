@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -31,11 +32,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private static final int REQUEST_ENABLE_BT = 1;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         // SharedPreferences initialization
         sp = getSharedPreferences("sharedData", Context.MODE_PRIVATE);

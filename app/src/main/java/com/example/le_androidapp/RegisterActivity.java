@@ -37,7 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     ImageView uploadImage;
     String imageURL;
     Button addbtn;
-    EditText firstName, middleName, lastName, userAge, contactNumber, userEmail, userPass;
+    EditText firstName, middleName, lastName, userAge, contactNumber;
     RadioGroup genderRadioGroup;
     RadioButton radioButtonFemale, radioButtonMale;
     Uri uri;
@@ -55,8 +55,6 @@ public class RegisterActivity extends AppCompatActivity {
         lastName = findViewById(R.id.userLast);
         userAge = findViewById(R.id.userAge);
         contactNumber = findViewById(R.id.contactNumber);
-        userEmail = findViewById(R.id.userEmail);
-        userPass = findViewById(R.id.userPass);
         radioButtonFemale = findViewById(R.id.female);
         radioButtonMale = findViewById(R.id.male);
 
@@ -110,6 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
         addbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 saveData();
             }
         });
@@ -155,11 +154,9 @@ public class RegisterActivity extends AppCompatActivity {
         String age = userAge.getText().toString();
         String gender = genderRadioGroup.toString();
         String contactNo = contactNumber.getText().toString();
-        String email = userEmail.getText().toString();
-        String pass = userPass.getText().toString();
 
         String userId = FirebaseDatabase.getInstance().getReference("User Data").push().getKey();
-        UserClass userClass = new UserClass(userId, firstN, middleN, lastN, age, gender, contactNo, email, pass, imageURL);
+        UserClass userClass = new UserClass(userId, firstN, middleN, lastN, age, gender, contactNo, imageURL);
 
 
         FirebaseDatabase.getInstance().getReference("User Data").child(lastN)
@@ -169,6 +166,8 @@ public class RegisterActivity extends AppCompatActivity {
                         if (task.isSuccessful()){
                             Toast.makeText(RegisterActivity.this, "Saved", Toast.LENGTH_SHORT).show();
                             finish();
+                        } else {
+                            Toast.makeText(RegisterActivity.this, "Info not saved.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {

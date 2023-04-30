@@ -16,6 +16,7 @@ public class ReadData {
         this.userId = userId;
     }
 
+    //Getters and Setters
     public String getDataId() {
         return dataId;
     }
