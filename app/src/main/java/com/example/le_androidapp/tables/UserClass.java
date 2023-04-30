@@ -20,7 +20,7 @@ public class UserClass {
         // Required empty constructor for Firebase Realtime Database.
     }
 
-    public UserClass(String userGender, String firstN, String middleN, String lastN, String age, String gender, String contactNo, String email) {
+    public UserClass(String userGender, String firstN, String middleN, String lastN, String age, String gender, String contactNo, String dataImage) {
     }
 
    /* public String getUserId() {

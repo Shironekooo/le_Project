@@ -108,7 +108,6 @@ public class RegisterActivity extends AppCompatActivity {
         addbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 saveData();
             }
         });
@@ -155,8 +154,8 @@ public class RegisterActivity extends AppCompatActivity {
         String gender = genderRadioGroup.toString();
         String contactNo = contactNumber.getText().toString();
 
-        String userId = FirebaseDatabase.getInstance().getReference("User Data").push().getKey();
-        UserClass userClass = new UserClass(userId, firstN, middleN, lastN, age, gender, contactNo, imageURL);
+
+        UserClass userClass = new UserClass(firstN, middleN, lastN, age, gender, contactNo, imageURL);
 
 
         FirebaseDatabase.getInstance().getReference("User Data").child(lastN)
@@ -166,8 +165,6 @@ public class RegisterActivity extends AppCompatActivity {
                         if (task.isSuccessful()){
                             Toast.makeText(RegisterActivity.this, "Saved", Toast.LENGTH_SHORT).show();
                             finish();
-                        } else {
-                            Toast.makeText(RegisterActivity.this, "Info not saved.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
