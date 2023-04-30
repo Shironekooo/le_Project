@@ -182,7 +182,7 @@ public class HomeFragment extends Fragment {
 //
 //                        txv.setText(Integer.toString(badPostureCount));
                     }
-                    }
+                }
             }
         });
 

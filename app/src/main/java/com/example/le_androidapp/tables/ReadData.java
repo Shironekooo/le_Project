@@ -1,19 +1,20 @@
 package com.example.le_androidapp.tables;
 
 public class ReadData {
-    private String dataId;
-    private int eventBad;
-    private long recordedTime;
 
-    private String userId;
+    String dataId;
+    int eventBad;
+    long recordedTime;
 
-    public ReadData() {}
+    public ReadData() {
+        // Default constructor required for calls to DataSnapshot.getValue(ReadData.class)
+    }
 
-    public ReadData(String dataId, int eventBad, long recordedTime, String userId) {
-        this.dataId = dataId;
+    public ReadData(String dataId, int eventBad, long recordedTime) {
+
         this.eventBad = eventBad;
         this.recordedTime = recordedTime;
-        this.userId = userId;
+        this.dataId = dataId;
     }
 
     //Getters and Setters
@@ -41,12 +42,5 @@ public class ReadData {
         this.recordedTime = recordedTime;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 }
 

@@ -27,10 +27,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.util.Date;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -41,6 +44,8 @@ public class RegisterActivity extends AppCompatActivity {
     RadioGroup genderRadioGroup;
     RadioButton radioButtonFemale, radioButtonMale;
     Uri uri;
+
+    private DatabaseReference usersRef;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -83,7 +88,7 @@ public class RegisterActivity extends AppCompatActivity {
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK){
+                        if (result.getResultCode() == Activity.RESULT_OK) {
                             Intent data = result.getData();
                             uri = data.getData();
                             uploadImage.setImageURI(uri);
@@ -114,7 +119,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    public void saveData(){
+    public void saveData() {
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Android Images")
                 .child(uri.getLastPathSegment());
@@ -130,7 +135,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
                 Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                while (!uriTask.isComplete());
+                while (!uriTask.isComplete()) ;
                 Uri urlImage = uriTask.getResult();
                 imageURL = urlImage.toString();
                 uploadData();
@@ -144,9 +149,9 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    public void uploadData(){
+    public void uploadData() {
 
-
+        String id = "user" + new Date().getTime();
         String firstN = firstName.getText().toString();
         String middleN = middleName.getText().toString();
         String lastN = lastName.getText().toString();
@@ -155,14 +160,11 @@ public class RegisterActivity extends AppCompatActivity {
         String contactNo = contactNumber.getText().toString();
 
 
-        UserClass userClass = new UserClass(firstN, middleN, lastN, age, gender, contactNo, imageURL);
-
-
-        FirebaseDatabase.getInstance().getReference("User Data").child(lastN)
-                .setValue(userClass).addOnCompleteListener(new OnCompleteListener<Void>() {
+        FirebaseDatabase.getInstance().getReference("User Data").child(lastN).setValue(new UserClass(id, firstN, middleN, lastN, age, gender, contactNo, imageURL))
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             Toast.makeText(RegisterActivity.this, "Saved", Toast.LENGTH_SHORT).show();
                             finish();
                         }
