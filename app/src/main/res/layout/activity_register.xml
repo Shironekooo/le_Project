@@ -142,33 +142,11 @@
                 android:textColor="@color/white"
                 tools:ignore="Autofill,HardcodedText,TextFields"/>
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:id="@+id/userEmail"
-                android:hint="Email"
-                android:textSize="20sp"
-                android:padding="16dp"
-                android:gravity="start|center_vertical"
-                android:textColor="@color/white"
-                tools:ignore="Autofill,HardcodedText,TextFields"/>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:id="@+id/userPass"
-                android:hint="Password"
-                android:textSize="20sp"
-                android:padding="16dp"
-                android:gravity="start|center_vertical"
-                android:textColor="@color/white"
-                tools:ignore="Autofill,HardcodedText,TextFields"/>
-
-
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Register"
+                android:layout_marginTop="15dp"
                 android:layout_gravity="center"
                 app:cornerRadius = "20dp"
                 android:id="@+id/addbtn"
