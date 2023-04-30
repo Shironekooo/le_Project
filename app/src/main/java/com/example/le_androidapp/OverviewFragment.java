@@ -27,7 +27,6 @@ public class OverviewFragment extends Fragment {
     @Inject DeviceViewModel deviceViewModel;
 
     TextView pitchView;
-    TextView rollView;
     TextView flexView;
 
     public OverviewFragment() {
@@ -45,17 +44,15 @@ public class OverviewFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_overview, container, false);
 
         pitchView = (TextView) view.findViewById(R.id.pitchView);
-        rollView = (TextView) view.findViewById(R.id.rollView);
         flexView = (TextView) view.findViewById(R.id.flexView);
 
         deviceViewModel.getConnectionState().observe(getViewLifecycleOwner(), new Observer<ConnectionState>() {
             @Override
             public void onChanged(ConnectionState connectionState) {
-                Log.e("OverviewFragment", "LifeCycleOnChanged");
+                // Log.e("OverviewFragment", "LifeCycleOnChanged");
                 if (connectionState instanceof ConnectionState.Connected) {
-                    pitchView.setText(Float.toString(((ConnectionState.Connected) connectionState).getXVal()));
-                    rollView.setText(Float.toString(((ConnectionState.Connected) connectionState).getYVal()));
-                    flexView.setText(Float.toString(((ConnectionState.Connected) connectionState).getZVal()));
+                    pitchView.setText(Float.toString(((ConnectionState.Connected) connectionState).getPitch()));
+                    flexView.setText(Float.toString(((ConnectionState.Connected) connectionState).getFlex()));
                 }
             }
         });
