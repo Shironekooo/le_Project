@@ -2,21 +2,21 @@ package com.example.le_androidapp.tables;
 
 public class History {
 
-    public int historyId;
-    public int totalEvent;
-    public long totalTime;
+    public String historyId;
+    public String totalEvent;
+    public String totalTime;
     public String usedMode;
     private String userId;
 
-    public int getHistoryId() {
+    public String getHistoryId() {
         return historyId;
     }
 
-    public int getTotalEvent() {
+    public String getTotalEvent() {
         return totalEvent;
     }
 
-    public long getTotalTime() {
+    public String getTotalTime() {
         return totalTime;
     }
 
@@ -32,7 +32,7 @@ public class History {
         this.userId = userId;
     }
 
-    public History(int historyId, int totalEvent, long totalTime, String usedMode, String userId) {
+    public History(String historyId, String totalEvent, String totalTime, String usedMode, String userId) {
         this.historyId = historyId;
         this.totalEvent = totalEvent;
         this.totalTime = totalTime;

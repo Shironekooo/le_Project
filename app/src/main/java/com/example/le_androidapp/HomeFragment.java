@@ -1,5 +1,7 @@
 package com.example.le_androidapp;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -31,12 +33,19 @@ import com.example.le_androidapp.data.DeviceResult;
 import com.example.le_androidapp.data.ConnectionState;
 import com.example.le_androidapp.data.DeviceReceiveManager;
 import com.example.le_androidapp.data.ble.DeviceBLEReceiveManager;
+import com.example.le_androidapp.tables.ReadData;
 import com.example.le_androidapp.util.Resource;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 //import com.example.finaldb.source.AppDatabase;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -77,6 +86,11 @@ public class HomeFragment extends Fragment {
     private boolean active = false;
     private boolean alertClicked = false;
 
+    long currentTimeMillis = System.currentTimeMillis();
+
+    DatabaseReference usersRef;
+    DatabaseReference dataRef;
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -105,6 +119,39 @@ public class HomeFragment extends Fragment {
         int modeSelect = sp.getInt("mode", -1);
         int phoneVibrate = sp.getInt("phoneVibrate", -1);
         SharedPreferences.Editor editor = sp.edit();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        String formattedTime = dateFormat.format(new Date(currentTimeMillis));
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        usersRef = database.getReference("User Data");
+        dataRef = database.getReference("Read Data");
+
+        String userId = usersRef.push().getKey();
+
+        // Write some data to the Firebase database
+        String dataId = dataRef.push().getKey();
+        ReadData readData = new ReadData(dataId, 10, formattedTime);
+        dataRef.child(dataId).setValue(readData);
+
+        // Query the data based on user ID
+        Query query = dataRef.orderByChild("dataId").equalTo(userId);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot readSnapshot : dataSnapshot.getChildren()) {
+                    ReadData readData = readSnapshot.getValue(ReadData.class);
+                    Log.d(TAG, "Read data: " + readData.getDataId() + ", " + readData.getEventBad());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.w(TAG, "Failed to read value.", databaseError.toException());
+            }
+        });
+
+
 
         bendy = (ImageView) view.findViewById(R.id.bendy_guy);
         txv = (TextView) view.findViewById(R.id.bad_posture_count);

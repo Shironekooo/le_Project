@@ -45,8 +45,6 @@ public class RegisterActivity extends AppCompatActivity {
     RadioButton radioButtonFemale, radioButtonMale;
     Uri uri;
 
-    private DatabaseReference usersRef;
-
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,7 +156,6 @@ public class RegisterActivity extends AppCompatActivity {
         String middleN = middleName.getText().toString();
         String lastN = lastName.getText().toString();
         String age = userAge.getText().toString();
-        //String gender = genderRadioGroup.toString();
         String contactNo = contactNumber.getText().toString();
 
 

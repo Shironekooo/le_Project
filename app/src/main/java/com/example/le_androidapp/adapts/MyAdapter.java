@@ -1,4 +1,4 @@
-package com.example.le_androidapp;
+package com.example.le_androidapp.adapts;
 
 
 import android.content.Context;
@@ -13,6 +13,8 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.le_androidapp.MainActivity;
+import com.example.le_androidapp.R;
 import com.example.le_androidapp.tables.UserClass;
 
 import java.util.List;

@@ -22,6 +22,8 @@ public class ProfileFragment extends Fragment {
     SharedPreferences sp;
     TextView txv;
 
+
+
     public ProfileFragment() {
         // Required empty public constructor
     }

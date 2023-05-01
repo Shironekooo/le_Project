@@ -4,13 +4,13 @@ public class ReadData {
 
     String dataId;
     int eventBad;
-    long recordedTime;
+    String recordedTime;
 
     public ReadData() {
         // Default constructor required for calls to DataSnapshot.getValue(ReadData.class)
     }
 
-    public ReadData(String dataId, int eventBad, long recordedTime) {
+    public ReadData(String dataId, int eventBad, String recordedTime) {
 
         this.eventBad = eventBad;
         this.recordedTime = recordedTime;
@@ -34,11 +34,11 @@ public class ReadData {
         this.eventBad = eventBad;
     }
 
-    public long getRecordedTime() {
+    public String getRecordedTime() {
         return recordedTime;
     }
 
-    public void setRecordedTime(long recordedTime) {
+    public void setRecordedTime(String recordedTime) {
         this.recordedTime = recordedTime;
     }
 
