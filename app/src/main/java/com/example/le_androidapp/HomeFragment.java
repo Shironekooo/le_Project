@@ -120,28 +120,25 @@ public class HomeFragment extends Fragment {
         int phoneVibrate = sp.getInt("phoneVibrate", -1);
         SharedPreferences.Editor editor = sp.edit();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        /*SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         String formattedTime = dateFormat.format(new Date(currentTimeMillis));
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         usersRef = database.getReference("User Data");
         dataRef = database.getReference("Read Data");
 
-        String userId = usersRef.push().getKey();
 
-        // Write some data to the Firebase database
-        String dataId = dataRef.push().getKey();
-        ReadData readData = new ReadData(dataId, 10, formattedTime);
-        dataRef.child(dataId).setValue(readData);
+        ReadData readData = new ReadData("", 10, formattedTime);
+        dataRef.child(userId).setValue(readData);
 
         // Query the data based on user ID
-        Query query = dataRef.orderByChild("dataId").equalTo(userId);
+        Query query = dataRef.orderByChild("userId").equalTo(userId);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot readSnapshot : dataSnapshot.getChildren()) {
                     ReadData readData = readSnapshot.getValue(ReadData.class);
-                    Log.d(TAG, "Read data: " + readData.getDataId() + ", " + readData.getEventBad());
+                    Log.d(TAG, "Read data: " + readData.getUserId() + ", " + readData.getEventBad() + readData.getRecordedTime());
                 }
             }
 
@@ -150,7 +147,7 @@ public class HomeFragment extends Fragment {
                 Log.w(TAG, "Failed to read value.", databaseError.toException());
             }
         });
-
+*/
 
 
         bendy = (ImageView) view.findViewById(R.id.bendy_guy);

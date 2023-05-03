@@ -1,25 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="13"
     tools:context=".OverviewFragment">
 
 
-    <TextView
-        android:id="@+id/overviewFragment"
+    <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:text="History"
-        android:textColor="@color/white"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:layout_weight="1"/>
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sort"
+            android:backgroundTint="@color/gray_700"
+            android:layout_gravity="start"
+            android:textSize="16sp"
+            android:id="@+id/sortBtn"
+            android:textColor="@color/accent"
+            android:onClick="sortTapped"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/overviewFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:layout_marginStart="36dp"
+            android:text="History"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
+
+    </androidx.appcompat.widget.Toolbar>
+
 
     <androidx.appcompat.widget.SearchView
         android:layout_width="match_parent"
@@ -34,71 +55,76 @@
         app:searchIcon="@drawable/baseline_search_24"
         android:layout_marginBottom="15dp"/>
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_margin="20dp"
-            android:layout_height="200dp"
-            android:padding="20dp"
-            android:id="@+id/recycleHisto"
-            tools:listitem="@layout/history_item">
-
-        </androidx.recyclerview.widget.RecyclerView>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/pitchView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="pitchNum"
-            android:layout_gravity="center"
-            android:layout_marginLeft="20sp"
-            android:textColor="@color/white"
-            android:textSize="30sp" />
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:id="@+id/sortTab">
 
         <TextView
+            android:id="@+id/eventAsc"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="pitch"
-            android:layout_marginRight="20sp"
-            android:gravity="end"
-            android:textColor="@color/white"
-            android:textSize="50sp" />
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:backgroundTint="@color/gray_700"
+            android:onClick="eventAscOnly"
+            android:text="EVENT ASC"
+            android:textColor="@color/accent"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <TextView
+            android:id="@+id/eventDecs"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:backgroundTint="@color/gray_700"
+            android:onClick="eventDescOnly"
+            android:text="EVENT DECS"
+            android:textColor="@color/accent"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <TextView
+            android:id="@+id/dateAsc"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:onClick="dateAscOnly"
+            android:text="DATE ASC"
+            android:textColor="@color/accent"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <TextView
+            android:id="@+id/dateDecs"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:onClick="dateDescOnly"
+            android:text="DATE DECS"
+            android:textColor="@color/accent"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            tools:ignore="TouchTargetSizeCheck" />
+
 
     </LinearLayout>
 
-    <LinearLayout
+
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_margin="20dp"
+        android:layout_height="400dp"
+        android:padding="5dp"
+        android:id="@+id/recycleHisto"
+        tools:listitem="@layout/history_item">
 
-        <TextView
-            android:id="@+id/flexView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="flexNum"
-            android:layout_gravity="center"
-            android:layout_marginLeft="20sp"
-            android:textColor="@color/white"
-            android:textSize="30sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="flex"
-            android:layout_marginRight="20sp"
-            android:gravity="end"
-            android:textColor="@color/white"
-            android:textSize="50sp" />
-
-    </LinearLayout>
+    </androidx.recyclerview.widget.RecyclerView>
 
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -9,13 +9,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.le_androidapp.adapts.HistoryAdapter;
@@ -25,7 +27,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
@@ -45,15 +46,21 @@ public class OverviewFragment extends Fragment {
 
     @Inject DeviceViewModel deviceViewModel;
 
-    TextView pitchView;
+    TextView pitchView, eventAsc, eventDesc, dateAsc, dateDesc;
     TextView flexView;
 
+    Button sortButton;
+    private LinearLayout sortView;
     private RecyclerView recyclerView;
     private HistoryAdapter historyAdapter;
     private DatabaseReference historyRef, usersRef;
     long currentTimeMillis = System.currentTimeMillis();
     private List<History> historyList;
+    private SearchView searchView;
 
+    boolean sortHidden = true;
+
+    ValueEventListener eventListener;
 
     public OverviewFragment() {
         // Required empty public constructor
@@ -70,8 +77,17 @@ public class OverviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_overview, container, false);
 
-        pitchView = (TextView) view.findViewById(R.id.pitchView);
-        flexView = (TextView) view.findViewById(R.id.flexView);
+        sortButton = (Button) view.findViewById(R.id.sortBtn);
+        //initSearchWidgets();
+        //initWidgets();
+        /*setUpData();
+        setUpList();
+        setUpOnclickListener();*/
+       /* pitchView = (TextView) view.findViewById(R.id.pitchView);
+        flexView = (TextView) view.findViewById(R.id.flexView);*/
+
+        hideSortTab();
+        showSortTab();
 
         deviceViewModel.getConnectionState().observe(getViewLifecycleOwner(), new Observer<ConnectionState>() {
             @Override
@@ -89,35 +105,41 @@ public class OverviewFragment extends Fragment {
         String formattedTime = dateFormat.format(new Date(currentTimeMillis));
 
         recyclerView = view.findViewById(R.id.recycleHisto);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        GridLayoutManager layoutManager = new GridLayoutManager(view.getContext(), 1);
+        recyclerView.setLayoutManager(layoutManager);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setCancelable(false);
+        AlertDialog dialog = builder.create();
+        dialog.show();
 
         historyList = new ArrayList<>();
 
         // Initialize the adapter with the empty historyList
-        historyAdapter = new HistoryAdapter(OverviewFragment.this, historyList);
+        historyAdapter = new HistoryAdapter(getContext(), historyList);
         recyclerView.setAdapter(historyAdapter);
 
         // Get the reference to the "history" node in Firebase
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        usersRef = database.getReference("User Data");
         historyRef = FirebaseDatabase.getInstance().getReference("History");
-
-        usersRef = FirebaseDatabase.getInstance().getReference("User Data");
-        String userId = usersRef.push().getKey();
+        dialog.show();
 
         // Write some data to the Firebase database
-        String historyId = historyRef.push().getKey();
-        History history = new History(historyId,"50", formattedTime, "Working", "123");
-        historyRef.child(historyId).setValue(history);
+        String userId = usersRef.getKey();
+        History history = new History(userId, "", formattedTime);
+        historyRef.child(userId).setValue(history);
 
         // Query the data based on user ID
-        Query query = historyRef.orderByChild("historyId").equalTo(userId);
-        query.addValueEventListener(new ValueEventListener() {
+        eventListener = historyRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot readSnapshot : dataSnapshot.getChildren()) {
                     History history1 = readSnapshot.getValue(History.class);
-                    Log.d(TAG, "History: " + history1.getHistoryId() + ", " + history1.getTotalEvent());
+                    historyList.add(history1);
                 }
                 historyAdapter.notifyDataSetChanged();
+                dialog.dismiss();
             }
 
             @Override
@@ -126,7 +148,58 @@ public class OverviewFragment extends Fragment {
             }
         });
 
-
         return view;
+    }
+
+
+
+
+    /*private void initSearchWidgets() {
+
+        searchView.findViewById(R.id.search);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+    }*/
+
+   public void showSortTab() {
+        sortView.setVisibility(View.VISIBLE);
+        sortButton.setText("HIDE");
+    }
+
+    public void hideSortTab(){
+        sortView.setVisibility(View.GONE);
+        sortButton.setText("SORT");
+    }
+
+    /*public void eventAscOnly(View view) {
+    }
+
+    public void eventDescOnly(View view) {
+    }
+
+    public void dateAscOnly(View view) {
+    }
+
+    public void dateDescOnly(View view) {
+    }*/
+
+    public void sortTapped(View view) {
+        if (sortHidden == true) {
+            sortHidden = false;
+            showSortTab();
+        } else {
+            sortHidden = true;
+            hideSortTab();
+        }
     }
 }
