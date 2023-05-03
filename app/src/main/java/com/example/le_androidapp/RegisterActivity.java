@@ -1,10 +1,9 @@
 package com.example.le_androidapp;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -13,7 +12,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,18 +20,16 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 
+import com.example.le_androidapp.tables.History;
+import com.example.le_androidapp.tables.ReadData;
 import com.example.le_androidapp.tables.UserClass;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.util.Date;
+import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -42,6 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
     Button addbtn;
     EditText firstName, middleName, lastName, userAge, contactNumber;
     RadioGroup genderRadioGroup;
+
     RadioButton radioButtonFemale, radioButtonMale;
     Uri uri;
 
@@ -62,59 +59,48 @@ public class RegisterActivity extends AppCompatActivity {
         radioButtonMale = findViewById(R.id.male);
 
         genderRadioGroup = findViewById(R.id.groupGender);
-        genderRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @SuppressLint("NonConstantResourceId")
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-                switch (checkedId) {
-                    case R.id.female:
-                        // Female option is selected
-                        selectedGender = "female";
-                        break;
-                    case R.id.male:
-                        // Male option is selected
-                        selectedGender = "male";
-                        break;
-                    default:
-                        // No option is selected
-                        break;
-                }
+        genderRadioGroup.setOnCheckedChangeListener((radioGroup, checkedId) -> {
+            switch (checkedId) {
+                case R.id.female:
+                    // Female option is selected
+                    selectedGender = "Female";
+                    break;
+                case R.id.male:
+                    // Male option is selected
+                    selectedGender = "Male";
+                    break;
+                default:
+                    // No option is selected
+                    break;
             }
         });
 
 
         ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            Intent data = result.getData();
-                            uri = data.getData();
-                            uploadImage.setImageURI(uri);
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        uri = data.getData();
+                        uploadImage.setImageURI(uri);
 
-                        } else {
-                            Toast.makeText(RegisterActivity.this, "No Image Selected", Toast.LENGTH_SHORT).show();
-                        }
+                    } else {
+                        Toast.makeText(RegisterActivity.this, "No Image Selected", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
 
-        uploadImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent photoPicker = new Intent(Intent.ACTION_PICK);
-                photoPicker.setType("image/*");
-                activityResultLauncher.launch(photoPicker);
-            }
+        uploadImage.setOnClickListener(view -> {
+            Intent photoPicker = new Intent(Intent.ACTION_PICK);
+            photoPicker.setType("image/*");
+            activityResultLauncher.launch(photoPicker);
         });
 
 
-        addbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveData();
-            }
+        addbtn.setOnClickListener(v -> {
+            saveData();
+            Intent intent = new Intent(RegisterActivity.this, PrimaryActivity.class);
+            startActivity(intent);
         });
 
     }
@@ -130,49 +116,56 @@ public class RegisterActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
 
-        storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+        storageReference.putFile(uri).addOnSuccessListener(taskSnapshot -> {
 
-                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                while (!uriTask.isComplete()) ;
-                Uri urlImage = uriTask.getResult();
-                imageURL = urlImage.toString();
-                uploadData();
-                dialog.dismiss();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                dialog.dismiss();
-            }
-        });
+            Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+            while (!uriTask.isComplete()) ;
+            Uri urlImage = uriTask.getResult();
+            imageURL = urlImage.toString();
+            uploadData();
+            dialog.dismiss();
+        }).addOnFailureListener(e -> dialog.dismiss());
     }
+
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference usersRef = database.getReference("User Data");
+    DatabaseReference readDataRef = database.getReference("Read Data");
+    DatabaseReference historyRef = database.getReference("History");
 
     public void uploadData() {
 
-        String id = "user" + new Date().getTime();
+        String userId = usersRef.push().getKey();
         String firstN = firstName.getText().toString();
         String middleN = middleName.getText().toString();
         String lastN = lastName.getText().toString();
         String age = userAge.getText().toString();
         String contactNo = contactNumber.getText().toString();
 
+        UserClass newUser = new UserClass(userId, firstN, middleN, lastN, age, selectedGender, contactNo, imageURL);
 
-        FirebaseDatabase.getInstance().getReference("User Data").child(lastN).setValue(new UserClass(id, firstN, middleN, lastN, age, selectedGender, contactNo, imageURL))
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(RegisterActivity.this, "Saved", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
+        // Save to User Data reference
+        usersRef.child(userId).setValue(newUser)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(RegisterActivity.this, "Saved to User Data", Toast.LENGTH_SHORT).show();
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(RegisterActivity.this, e.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                }).addOnFailureListener(e -> Toast.makeText(RegisterActivity.this, Objects.requireNonNull(e.getMessage()), Toast.LENGTH_SHORT).show());
+
+        // Save to ReadData reference
+        ReadData newReadData = new ReadData(userId);
+        readDataRef.child(userId).setValue(newReadData)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
                     }
-                });
+                }).addOnFailureListener(e -> Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show());
+
+        // Save to History reference
+        History newHistory = new History(userId);
+        historyRef.child(userId).setValue(newHistory)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                    }
+                }).addOnFailureListener(e -> Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show());
+
     }
 }
