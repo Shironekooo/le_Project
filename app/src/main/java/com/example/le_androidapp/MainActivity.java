@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         sp = getSharedPreferences("sharedData", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt("badCount", 0);
-        editor.putInt("mode", 1);
+        editor.putBoolean("isFlexSensor", true);
         editor.putInt("phoneVibrate", 1);
         editor.putString("currentScreen", "blank");
         editor.commit();
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     // Creation of fragments to avoid fragment destruction during fragment replacement
     HomeFragment homeFragment = new HomeFragment();
     ArticlesFragment articlesFragment = new ArticlesFragment();
-    ModeFragment modeFragment = new ModeFragment();
+    FaqFragment faqFragment = new FaqFragment();
     OverviewFragment overviewFragment = new OverviewFragment();
     ProfileFragment profileFragment = new ProfileFragment();
 
@@ -86,10 +86,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, articlesFragment).commit();
                 return true;
 
-            case R.id.mode:
-                editor.putString("currentScreen", "mode");
+            case R.id.faq:
+                editor.putString("currentScreen", "faq");
                 editor.commit();
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, modeFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, faqFragment).commit();
                 return true;
 
             case R.id.overview:
@@ -136,20 +136,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         switch (screen) {
             case "articles":
-            case "mode":
             case "overview":
             case "profile":
             case "settings":
+            case "faq":
                 bottomNavigationView.setSelectedItemId(R.id.home);
                 editor.putString("currentScreen", "home");
                 editor.commit();
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
-                break;
-            case "faq":
-                bottomNavigationView.setSelectedItemId(R.id.mode);
-                editor.putString("currentScreen", "mode");
-                editor.commit();
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, modeFragment).commit();
                 break;
             case "switchUser":
                 bottomNavigationView.setSelectedItemId(R.id.profile);

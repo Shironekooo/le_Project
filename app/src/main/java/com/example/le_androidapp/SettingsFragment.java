@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -30,7 +31,7 @@ import java.io.FileOutputStream;
 
 public class SettingsFragment extends Fragment {
 
-    Switch phoneVibrateSwitch;
+    SwitchCompat phoneVibrateSwitch;
 
     Button exportDownload;
     Button supportDevs;
@@ -54,7 +55,7 @@ public class SettingsFragment extends Fragment {
         Vibrator v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 
         // Setting to turn phone vibration on or off
-        phoneVibrateSwitch = (Switch) view.findViewById(R.id.setting_switch2);
+        phoneVibrateSwitch = (SwitchCompat) view.findViewById(R.id.setting_switch2);
         phoneVibrateSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,7 +97,6 @@ public class SettingsFragment extends Fragment {
         return view;
     }
 
-    // TODO
     private void generatePDF() {
         String fileName = "PosturePerfectData.pdf";
         File pdfFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName);

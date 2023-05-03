@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/mode"
-        android:title="@string/mode"
+        android:id="@+id/faq"
+        android:title="FAQ"
         android:icon="@drawable/bnav_mode"/>
     <item
         android:id="@+id/articles"
@@ -14,7 +14,7 @@
         android:icon="@drawable/bnav_home"/>
     <item
         android:id="@+id/overview"
-        android:title="@string/overview"
+        android:title="History"
         android:icon="@drawable/bnav_overview"/>
     <item
         android:id="@+id/profile"

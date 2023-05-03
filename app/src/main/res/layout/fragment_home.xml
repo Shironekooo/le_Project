@@ -12,17 +12,25 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <!--ImageButton
-            android:id="@+id/notification_button"
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/sensorSwitch"
             android:layout_width="75dp"
             android:layout_height="75dp"
-            android:background="@null"
-            android:src="@drawable/home_notification" /-->
+            android:scaleX="2"
+            android:scaleY="2"
+            android:checked="true"
+            android:trackTint="@color/white"
+            android:thumbTint="@color/accent" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="75dp"
-            android:layout_weight="1" />
+        <TextView
+            android:id="@+id/currentSensor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:textColor="@color/accent"/>
 
         <ImageButton
             android:id="@+id/settings_button"
@@ -36,7 +44,7 @@
         android:id="@+id/bendy_guy"
         android:layout_height="250dp"
         android:layout_width="250dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"/>
@@ -46,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="250dp"
+        android:layout_marginTop="260dp"
         android:layout_gravity="center">
 
         <ImageView
@@ -78,33 +86,5 @@
         android:text="Connect/Calibrate"
         android:backgroundTint="@color/accent"
         android:textColor="@color/black"/>
-
-    <!--LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ble_scan_button"
-        android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/bad_posture_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50sp"
-            android:layout_marginRight="25sp"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:text="Bad While Work" />
-
-        <Button
-            android:id="@+id/bad_posture_button_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50sp"
-            android:layout_marginRight="25sp"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:text="Bad While Rest" />
-    </LinearLayout-->
-
 
 </RelativeLayout>

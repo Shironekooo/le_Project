@@ -17,12 +17,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -46,6 +48,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -57,39 +60,58 @@ import kotlinx.coroutines.flow.MutableSharedFlow;
 @AndroidEntryPoint
 public class HomeFragment extends Fragment {
 
-    @Inject DeviceViewModel deviceViewModel;
+    @Inject
+    DeviceViewModel deviceViewModel;
 
     SettingsFragment settingsFragment = new SettingsFragment();
 
+    // View and Button Initializations
     ImageButton settingsButton;
-
     Button bleButton;
+    SwitchCompat sensorSwitch;
 
     TextView txv;
+    TextView sensorDisplay;
 
     ImageView bendy;
 
+    // UI Thread Initializations
     private Handler handler;
     private Runnable runnable;
     private Timer timer;
 
-    private View view;
-
+    // Temporary BPC Value
     private int badPostureCount = 0;
 
-    private float calibrateIncrement = 0;
-    private float calibratedBend = 0;
+    // Standardization Values
+    final private double pitchDifference = 26.67;
+    final private double baseAngle = 90.0;
+    final private double marginOfError = 10;
+    final private double flexSensitivityAdjustment = 15;
+
+    // Initialization for Calibration
+    private float pitchSummation = 0;
+    private float flexSummation = 0;
+
+    private float calibratedPitch = 0;
+    private float calibratedFlex = 0;
+    private double calibratedBend = 0;
+
     private boolean calibrationDone = false;
+
     private int currentCalibrate = 0;
     final private int reqCalibrate = 100;
 
     private boolean active = false;
     private boolean alertClicked = false;
 
+    private boolean isFlex = true;
+
     long currentTimeMillis = System.currentTimeMillis();
 
     DatabaseReference usersRef;
     DatabaseReference dataRef;
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -104,6 +126,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void run() {
                 txv.setText(Integer.toString(badPostureCount));
+                if (isFlex) sensorDisplay.setText("Flex Sensor");
+                else sensorDisplay.setText("Gyro-Pitch");
             }
         }, 0);
     }
@@ -111,12 +135,15 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        // SharedPreferences initialization for HomeFragment
+        final boolean[] isChecking = {false};
+        final boolean[] incrementationOccurred = {false};
+
+        // Retrieving values from SharedPreferences
         SharedPreferences sp = getActivity().getSharedPreferences("sharedData", Context.MODE_PRIVATE);
         badPostureCount = sp.getInt("badCount", 0);
-        int modeSelect = sp.getInt("mode", -1);
+        isFlex = sp.getBoolean("isFlexSensor", true);
         int phoneVibrate = sp.getInt("phoneVibrate", -1);
         SharedPreferences.Editor editor = sp.edit();
 
@@ -151,104 +178,105 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
-
         bendy = (ImageView) view.findViewById(R.id.bendy_guy);
         txv = (TextView) view.findViewById(R.id.bad_posture_count);
-        final boolean[] incrementationOccurred = {false};
 
         Vibrator v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 
-        // TODO change this ASAP
         deviceViewModel.getConnectionState().observe(getViewLifecycleOwner(), new Observer<ConnectionState>() {
             @Override
             public void onChanged(ConnectionState connectionState) {
                 if (connectionState instanceof ConnectionState.Connected) {
                     //Log.e("HomeFragment", "Connected");
 
-
                     float pitch = ((ConnectionState.Connected) connectionState).getPitch();
                     float flex = ((ConnectionState.Connected) connectionState).getFlex();
 
                     if (!calibrationDone) {
-                        calibrateIncrement += pitch;
+                        pitchSummation += pitch;
+                        flexSummation += flex;
                         currentCalibrate += 1;
-                        Log.e("Calibration", "Increment = " + calibrateIncrement +
-                                "; Current = " + currentCalibrate);
-                        if (currentCalibrate == reqCalibrate){
+
+                        Log.e("Calibration", "Current = " + currentCalibrate +
+                                "| Pitch = " + pitch +
+                                "| PitchSummation = " + pitchSummation +
+                                "| Flex = " + flex +
+                                "| FlexSummation = " + flexSummation);
+
+                        if (currentCalibrate == reqCalibrate) {
                             calibrationDone = true;
                             alertClicked = false;
-                            calibratedBend = calibrateIncrement / reqCalibrate;
-                            Log.e("Calibration", "Done: " + calibrationDone +
-                                    "; Calibrated Bend = " + calibratedBend);
+
+                            calibratedPitch = pitchSummation / reqCalibrate;
+                            calibratedFlex = flexSummation / reqCalibrate;
+
+                            calibratedBend = (calibratedFlex + Math.min(0, mathMap(calibratedPitch, 0,
+                                    0 - pitchDifference, baseAngle, 0)) / 2) ;
+
                         }
                     }
 
+                    // TODO
                     if (active) {
-                        Toast.makeText(getActivity(), "device actively working", Toast.LENGTH_SHORT).show();
-//                        if (roll >= 0) bendy.setImageResource(R.drawable.body90);
-//                        else if (roll >= -2) bendy.setImageResource(R.drawable.body85);
-//                        else if (roll >= -4) bendy.setImageResource(R.drawable.body80);
-//                        else if (roll >= -6) bendy.setImageResource(R.drawable.body75);
-//                        else if (roll >= -8) bendy.setImageResource(R.drawable.body70);
-//                        else if (roll >= -9) bendy.setImageResource(R.drawable.body65);
-//                        else if (roll >= -10) bendy.setImageResource(R.drawable.body60);
-//                        else if (roll >= -12) bendy.setImageResource(R.drawable.body55);
-//                        else if (roll >= -14) bendy.setImageResource(R.drawable.body50);
-//                        else if (roll >= -16) bendy.setImageResource(R.drawable.body45);
-//                        else bendy.setImageResource(R.drawable.body40);
-//
-//                        int minRoll, maxRoll = -14;
-//
-//                        switch (modeSelect) {
-//                            case 1:
-//                                minRoll = -4;
-//                                break;
-//                            case 2:
-//                                minRoll = -8;
-//                                break;
-//                            case -1:
-//                            default:
-//                                minRoll = -4;
-//                                Toast.makeText(getActivity(), "Error in Setting Mode", Toast.LENGTH_SHORT).show();
-//                                Log.e("HomeFragment", "Mode selection failed");
-//                                break;
-//                        }
-//
-//                        int maxFlex = -425;
-//                        if (flex <= -maxFlex) {
-//                            new CountDownTimer(5000, 1000) {
-//                                float currentBend = ((ConnectionState.Connected) connectionState).getYVal();
-//                                float currentFlex = ((ConnectionState.Connected) connectionState).getZVal();
-//
-//                                @Override
-//                                public void onTick(long millisUntilFinished) {
-//                                    if ((currentBend >= minRoll) || (currentBend <= maxRoll) || (currentFlex >= -maxFlex)) cancel();
-//                                }
-//
-//                                @Override
-//                                public void onFinish() {
-//                                    float lastBend = ((ConnectionState.Connected) connectionState).getYVal();
-//                                    float lastFlex = ((ConnectionState.Connected) connectionState).getZVal();
-//
-//                                    if ((((lastBend <= minRoll) && (lastBend >= maxRoll)) && lastFlex <= -maxFlex) && !incrementationOccurred[0]) {
-//                                        badPostureCount++;
-//                                        editor.putInt("badCount", badPostureCount).commit();
-//                                        incrementationOccurred[0] = true;
-//                                        if (phoneVibrate == 1) v.vibrate(500);
-//                                    }
-//                                }
-//                            }.start();
-//                        } else {
-//                            new Handler().postDelayed(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    incrementationOccurred[0] = false;
-//                                }
-//                            }, 5000);
-//                        }
-//
-//                        txv.setText(Integer.toString(badPostureCount));
+                        // Toast.makeText(getActivity(), "device actively working", Toast.LENGTH_SHORT).show();
+
+                        // Conversion of pitch data
+                        double currentPitch = Math.min(baseAngle, mathMap(pitch, 0, 0 - pitchDifference,
+                                baseAngle, 0));
+                        double currentFlex = Math.min(baseAngle, flex + (calibratedFlex - baseAngle));
+
+                        double currentBend;
+                        if (isFlex) {
+//                            calibratedBend = Math.min(baseAngle, calibratedFlex);
+                            currentBend = currentFlex;
+                        } else {
+//                            calibratedBend = mathMap(calibratedPitch, 0,
+//                                    0 - pitchDifference, baseAngle, 0);
+                            currentBend = currentPitch;
+                        }
+
+                        //double currentBend = (currentPitch + currentFlex) / 2;
+
+                        Log.e("Active", "| Adjusted Pitch = " + currentPitch +
+                                "| Adjusted Flex = " + currentFlex +
+                                "| Average Bend = " + currentBend);
+
+                        // Bendy guy display determination
+                        if (currentBend + marginOfError >= 90) bendy.setImageResource(R.drawable.body90);
+                        else if (currentBend + marginOfError >= 85) bendy.setImageResource(R.drawable.body85);
+                        else if (currentBend + marginOfError >= 80) bendy.setImageResource(R.drawable.body80);
+                        else if (currentBend + marginOfError >= 75) bendy.setImageResource(R.drawable.body75);
+                        else if (currentBend + marginOfError >= 70) bendy.setImageResource(R.drawable.body70);
+                        else if (currentBend + marginOfError >= 65) bendy.setImageResource(R.drawable.body65);
+                        else if (currentBend + marginOfError >= 60) bendy.setImageResource(R.drawable.body60);
+                        else if (currentBend + marginOfError >= 55) bendy.setImageResource(R.drawable.body55);
+                        else if (currentBend + marginOfError >= 50) bendy.setImageResource(R.drawable.body50);
+                        else if (currentBend + marginOfError >= 45) bendy.setImageResource(R.drawable.body45);
+                        else bendy.setImageResource(R.drawable.body40);
+
+                        // Bad Posture Determination Algorithm
+                        // TODO
+                        // Log.e("Bad Posture", "Diff = " + (averageBend - calibratedBend));
+
+                        // Log.e("Back", "Bad is " + isBad);
+                        boolean isBad;
+                        if (isFlex) {
+                            isBad = (calibratedBend - currentBend) > marginOfError + flexSensitivityAdjustment;
+                        } else {
+                            isBad = (calibratedBend - currentBend) > marginOfError;
+                        }
+
+                        if (isBad && !incrementationOccurred[0]) {
+                            if (phoneVibrate == 1) v.vibrate(500);
+                            incrementationOccurred[0] = true;
+                            badPostureCount++;
+                            Log.e("BPCount", "Count = " + badPostureCount);
+                            editor.putInt("badCount", badPostureCount).commit();
+                        } else if (!isBad) {
+                            incrementationOccurred[0] = false;
+                        }
+
+                        txv.setText(Integer.toString(badPostureCount));
                     }
                 }
             }
@@ -266,8 +294,25 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // TODO recheck device initialization timings
-        // TODO change builder strings
+        sensorSwitch = (SwitchCompat) view.findViewById(R.id.sensorSwitch);
+        sensorDisplay = (TextView) view.findViewById(R.id.currentSensor);
+        sensorSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sensorSwitch.isChecked()) {
+                    isFlex = true;
+                    editor.putBoolean("isFlexSensor", true).commit();
+                    sensorDisplay.setText("Flex Sensor");
+                }
+                else {
+                    isFlex = false;
+                    editor.putBoolean("isFlexSensor", false).commit();
+                    sensorDisplay.setText("Gyro-Pitch");
+                }
+            }
+        });
+
+        // BLE Button Actions
         bleButton = (Button) view.findViewById(R.id.ble_scan_button);
         bleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -275,8 +320,10 @@ public class HomeFragment extends Fragment {
                 active = false;
                 alertClicked = true;
                 currentCalibrate = 0;
-                calibrateIncrement = 0;
-                if (!(deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Connected)){
+                pitchSummation = 0;
+                flexSummation = 0;
+
+                if (!(deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Connected)) {
                     deviceViewModel.initializeConnection();
                     calibrationDone = false;
                 } else if (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Connected) {
@@ -290,11 +337,12 @@ public class HomeFragment extends Fragment {
                     }, 3000);
                 }
 
+                // AlertDialog Message
                 String[] messages = {"Note that the device needs to be calibrated before use.",
                         " The device will be calibrated in a few seconds.",
                         " If the device is not calibrated, data will be inaccurate."};
                 String alertMessage = "<ul>";
-                for (String message: messages) {
+                for (String message : messages) {
                     alertMessage += "<li>" + message + "</li>";
                 }
                 alertMessage += "</ul>";
@@ -310,6 +358,7 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(getActivity(), "Cancelled. Device not calibrated.", Toast.LENGTH_SHORT).show();
+                        active = true;
                         dialog.dismiss();
                     }
                 });
@@ -330,6 +379,7 @@ public class HomeFragment extends Fragment {
                     }
                 };
 
+                // Checks every second to determine whether positive button can be enabled
                 timer = new Timer();
                 timer.schedule(new TimerTask() {
                     @Override
@@ -350,34 +400,14 @@ public class HomeFragment extends Fragment {
                         dialog.dismiss();
                     }
                 });
-//                builder.setPositiveButton("Start", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        if (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Uninitialized) {
-//                            deviceViewModel.initializeConnection();
-//                            Log.e("HomeFragment", "InitializeConnection");
-//                            Toast.makeText(getActivity(), "Initializing connection", Toast.LENGTH_SHORT).show();
-//                        } else if ((deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Connected) || (deviceViewModel.getConnectionState().getValue() instanceof ConnectionState.Disconnected)){
-//                            Toast.makeText(getActivity(), "Recalibrating", Toast.LENGTH_SHORT).show();
-//                            deviceViewModel.disconnect();
-//                            new Handler().postDelayed(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    deviceViewModel.initializeConnection();
-//                                }
-//                            }, 3000);
-//
-//                        }
-//                    }
-//                });
-//                AlertDialog dialog = builder.create();
-//                dialog.show();
+
             }
         });
 
         return view;
     }
 
+    // To avoid NullPointerError
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -392,5 +422,10 @@ public class HomeFragment extends Fragment {
 
         if (timer != null) timer.cancel();
         if (handler != null) handler.removeCallbacks(runnable);
+    }
+
+    // Math.map() function
+    public static double mathMap(double value, double inputMin, double inputMax, double outputMin, double outputMax) {
+        return (value - inputMin) / (inputMax - inputMin) * (outputMax - outputMin) + outputMin;
     }
 }
