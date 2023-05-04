@@ -103,6 +103,7 @@ public class RegisterActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+
     }
 
     public void saveData() {
@@ -125,6 +126,8 @@ public class RegisterActivity extends AppCompatActivity {
             uploadData();
             dialog.dismiss();
         }).addOnFailureListener(e -> dialog.dismiss());
+
+
     }
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -159,6 +162,11 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 }).addOnFailureListener(e -> Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show());
 
+        HomeFragment homeFragment = new HomeFragment();
+
+
+
+
         // Save to History reference
         History newHistory = new History(userId);
         historyRef.child(userId).setValue(newHistory)
@@ -168,4 +176,6 @@ public class RegisterActivity extends AppCompatActivity {
                 }).addOnFailureListener(e -> Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show());
 
     }
+
+
 }

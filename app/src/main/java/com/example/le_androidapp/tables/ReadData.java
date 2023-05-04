@@ -21,6 +21,10 @@ public class ReadData {
         this.userId = userId;
     }
 
+    public ReadData() {
+
+    }
+
     //Getters and Setters
     public int getEventBad() {
         return eventBad;

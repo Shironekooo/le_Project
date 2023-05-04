@@ -42,12 +42,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 //import com.example.finaldb.source.AppDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -81,7 +84,7 @@ public class HomeFragment extends Fragment {
     private Timer timer;
 
     // Temporary BPC Value
-    private int badPostureCount = 0;
+    int badPostureCount = 0;
 
     // Standardization Values
     final private double pitchDifference = 26.67;
@@ -109,8 +112,7 @@ public class HomeFragment extends Fragment {
 
     long currentTimeMillis = System.currentTimeMillis();
 
-    DatabaseReference usersRef;
-    DatabaseReference dataRef;
+    DatabaseReference dataRef, userRef;
 
 
     public HomeFragment() {
@@ -130,12 +132,28 @@ public class HomeFragment extends Fragment {
                 else sensorDisplay.setText("Gyro-Pitch");
             }
         }, 0);
+
     }
+
+    ReadData user = new ReadData();
+    String userId = "defaultUserId";
+    private void saveBadPostureCount(int badPostureCount) {
+        DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference("Read Data").child(userId);
+        dataRef.child("Daily Event").setValue(badPostureCount)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("BPCount", "Count = " + badPostureCount);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("BPCount", "Failed to save count: " + e.getMessage());
+                });
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
 
         final boolean[] isChecking = {false};
         final boolean[] incrementationOccurred = {false};
@@ -146,37 +164,6 @@ public class HomeFragment extends Fragment {
         isFlex = sp.getBoolean("isFlexSensor", true);
         int phoneVibrate = sp.getInt("phoneVibrate", -1);
         SharedPreferences.Editor editor = sp.edit();
-
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-//        String formattedTime = dateFormat.format(new Date(currentTimeMillis));
-//
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        usersRef = database.getReference("User Data");
-//        dataRef = database.getReference("Read Data");
-//
-//        String userId = usersRef.push().getKey();
-//
-//        // Write some data to the Firebase database
-//        String dataId = dataRef.push().getKey();
-//        ReadData readData = new ReadData(dataId, 10, formattedTime);
-//        dataRef.child(dataId).setValue(readData);
-//
-//        // Query the data based on user ID
-//        Query query = dataRef.orderByChild("dataId").equalTo(userId);
-//        query.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot readSnapshot : dataSnapshot.getChildren()) {
-//                    ReadData readData = readSnapshot.getValue(ReadData.class);
-//                    Log.d(TAG, "Read data: " + readData.getDataId() + ", " + readData.getEventBad());
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                Log.w(TAG, "Failed to read value.", databaseError.toException());
-//            }
-//        });
 
         bendy = (ImageView) view.findViewById(R.id.bendy_guy);
         txv = (TextView) view.findViewById(R.id.bad_posture_count);
@@ -272,6 +259,7 @@ public class HomeFragment extends Fragment {
                             badPostureCount++;
                             Log.e("BPCount", "Count = " + badPostureCount);
                             editor.putInt("badCount", badPostureCount).commit();
+                            saveBadPostureCount(badPostureCount);
                         } else if (!isBad) {
                             incrementationOccurred[0] = false;
                         }
