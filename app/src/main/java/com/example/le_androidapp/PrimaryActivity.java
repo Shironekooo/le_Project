@@ -37,52 +37,60 @@ public class PrimaryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_primary);
 
-    regbutton = findViewById(R.id.newbtn);
-    recyclerView = findViewById(R.id.recyclerView);
+        regbutton = findViewById(R.id.newbtn);
+        recyclerView = findViewById(R.id.recyclerView);
 
-    GridLayoutManager gridLayoutManager = new GridLayoutManager(PrimaryActivity.this,1);
-    recyclerView.setLayoutManager(gridLayoutManager);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(PrimaryActivity.this, 1);
+        recyclerView.setLayoutManager(gridLayoutManager);
 
-    AlertDialog.Builder builder = new AlertDialog.Builder(PrimaryActivity.this);
-    builder.setCancelable(false);
-    builder.setView(R.layout.loading_layout);
-    AlertDialog dialog = builder.create();
-    dialog.show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(PrimaryActivity.this);
+        builder.setCancelable(false);
+        builder.setView(R.layout.loading_layout);
+        AlertDialog dialog = builder.create();
+        dialog.show();
 
-    userList = new ArrayList<>();
+        userList = new ArrayList<>();
 
-    MyAdapter adapter = new MyAdapter(PrimaryActivity.this, userList);
-    recyclerView.setAdapter(adapter);
+        MyAdapter adapter = new MyAdapter(PrimaryActivity.this, userList);
+        recyclerView.setAdapter(adapter);
 
-    databaseReference = FirebaseDatabase.getInstance().getReference("User Data");
-    dialog.show();
+        databaseReference = FirebaseDatabase.getInstance().getReference("User Data");
+        dialog.show();
 
-    eventListener = databaseReference.addValueEventListener(new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot snapshot) {
-            userList.clear();
-            for (DataSnapshot itemSnapshot: snapshot.getChildren()){
-                UserClass userClass=itemSnapshot.getValue(UserClass.class);
-                userList.add(userClass);
+        eventListener = databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                userList.clear();
+                for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
+                    UserClass userClass = itemSnapshot.getValue(UserClass.class);
+                    userList.add(userClass);
+                }
+                adapter.notifyDataSetChanged();
+                dialog.dismiss();
             }
-            adapter.notifyDataSetChanged();
-            dialog.dismiss();
-        }
 
-        @Override
-        public void onCancelled(@NonNull DatabaseError error) {
-            dialog.dismiss();
-        }
-    });
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                dialog.dismiss();
+            }
+        });
 
 
-    regbutton.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(PrimaryActivity.this, RegisterActivity.class);
-            startActivity(intent);
-        }
-    });
+        regbutton.setOnClickListener(new View.OnClickListener()
 
+            {
+                @Override
+                public void onClick (View v){
+                Intent intent = new Intent(PrimaryActivity.this, RegisterActivity.class);
+                startActivity(intent);
+            }
+            });
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        databaseReference.removeEventListener(eventListener);
     }
 }

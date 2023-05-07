@@ -2,36 +2,35 @@ package com.example.le_androidapp.tables;
 
 public class ReadData {
 
-    int eventBad;
-    String recordedTime;
-    String userId;
-
-    public ReadData(String userId, int i, String formattedTime) {
-    }
-
-
-    public ReadData(String userId) {
-        // Default constructor required for calls to DataSnapshot.getValue(ReadData.class)
-    }
-
-    public ReadData(int eventBad, String recordedTime, String userId) {
-
-        this.eventBad = eventBad;
-        this.recordedTime = recordedTime;
-        this.userId = userId;
-    }
+    public int eventBad;
+    public String recordedTime;
+    public String userId;
+    public int totalEvent;
+    public String totalTime;
 
     public ReadData() {
 
     }
 
-    //Getters and Setters
+    public ReadData(String userId) {
+        this.userId=userId;
+    }
+
+
     public int getEventBad() {
         return eventBad;
     }
 
-    public void setEventBad(int eventBad) {
-        this.eventBad = eventBad;
+    public void setTotalEvent(int totalEvent) {
+        this.totalEvent = totalEvent;
+    }
+
+    public void setTotalTime(String totalTime) {
+        this.totalTime = totalTime;
+    }
+
+    public void setEventBad(int badPostureCount) {
+        this.eventBad = badPostureCount;
     }
     public String getRecordedTime() {
         return recordedTime;
@@ -42,10 +41,20 @@ public class ReadData {
     public String getUserId() {
         return userId;
     }
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public String setUserId() {this.userId = userId;
+        return userId;
+    }
+    public String getTotalTime() {
+        return totalTime;
+    }
+    public int getTotalEvent() { return totalEvent;
     }
 
+    public ReadData(int eventBad, String recordedTime, String userId) {
+        this.eventBad = eventBad;
+        this.recordedTime = recordedTime;
+        this.userId = userId;
+    }
 
 }
 

@@ -20,7 +20,6 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 
-import com.example.le_androidapp.tables.History;
 import com.example.le_androidapp.tables.ReadData;
 import com.example.le_androidapp.tables.UserClass;
 import com.google.android.gms.tasks.Task;
@@ -42,7 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
     RadioButton radioButtonFemale, radioButtonMale;
     Uri uri;
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint({"MissingInflatedId", "NonConstantResourceId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
+                        assert data != null;
                         uri = data.getData();
                         uploadImage.setImageURI(uri);
 
@@ -133,7 +133,6 @@ public class RegisterActivity extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference usersRef = database.getReference("User Data");
     DatabaseReference readDataRef = database.getReference("Read Data");
-    DatabaseReference historyRef = database.getReference("History");
 
     public void uploadData() {
 
@@ -157,19 +156,6 @@ public class RegisterActivity extends AppCompatActivity {
         // Save to ReadData reference
         ReadData newReadData = new ReadData(userId);
         readDataRef.child(userId).setValue(newReadData)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                    }
-                }).addOnFailureListener(e -> Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show());
-
-        HomeFragment homeFragment = new HomeFragment();
-
-
-
-
-        // Save to History reference
-        History newHistory = new History(userId);
-        historyRef.child(userId).setValue(newHistory)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                     }

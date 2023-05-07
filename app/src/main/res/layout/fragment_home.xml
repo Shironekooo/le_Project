@@ -37,7 +37,8 @@
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:background="@null"
-            android:src="@drawable/home_settings" />
+            android:src="@drawable/home_settings"
+            tools:ignore="SpeakableTextPresentCheck" />
     </LinearLayout>
 
     <ImageView
@@ -76,15 +77,35 @@
 
     </RelativeLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/countLayout">
+
     <Button
         android:id="@+id/ble_scan_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/countLayout"
-        android:layout_marginTop="25dp"
         android:layout_centerInParent="true"
         android:text="Connect/Calibrate"
+        app:cornerRadius = "20dp"
+        android:layout_marginRight="20dp"
         android:backgroundTint="@color/accent"
         android:textColor="@color/black"/>
+
+        <Button
+            android:id="@+id/finish_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Finish"
+            app:cornerRadius = "20dp"
+            android:backgroundTint="@color/accent"
+            android:textColor="@color/black"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

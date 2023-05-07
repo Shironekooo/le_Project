@@ -1,14 +1,10 @@
 package com.example.le_androidapp;
 
-import static android.content.ContentValues.TAG;
-
 import android.app.AlertDialog;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Vibrator;
@@ -17,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Filter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,34 +26,26 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 
 //import com.example.finaldb.dao.UserDao;
-import com.example.le_androidapp.data.DeviceResult;
 import com.example.le_androidapp.data.ConnectionState;
-import com.example.le_androidapp.data.DeviceReceiveManager;
-import com.example.le_androidapp.data.ble.DeviceBLEReceiveManager;
 import com.example.le_androidapp.tables.ReadData;
-import com.example.le_androidapp.util.Resource;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 //import com.example.finaldb.source.AppDatabase;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import kotlinx.coroutines.flow.MutableSharedFlow;
 
 @AndroidEntryPoint
 public class HomeFragment extends Fragment {
@@ -70,7 +57,7 @@ public class HomeFragment extends Fragment {
 
     // View and Button Initializations
     ImageButton settingsButton;
-    Button bleButton;
+    Button bleButton, finishBtn;
     SwitchCompat sensorSwitch;
 
     TextView txv;
@@ -112,16 +99,22 @@ public class HomeFragment extends Fragment {
 
     long currentTimeMillis = System.currentTimeMillis();
 
-    DatabaseReference dataRef, userRef;
+   String startTime, endTime;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
 
 
     public HomeFragment() {
         // Required empty public constructor
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Initialize the dataRef variable
+
 
         // Displays badPostureCount upon HomeFragment switch
         new Handler().postDelayed(new Runnable() {
@@ -133,19 +126,68 @@ public class HomeFragment extends Fragment {
             }
         }, 0);
 
-    }
 
-    ReadData user = new ReadData();
-    String userId = "defaultUserId";
+
+    }
+    String userId = "-NUo1t7j4T9anU-lioKL";
+
     private void saveBadPostureCount(int badPostureCount) {
-        DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference("Read Data").child(userId);
-        dataRef.child("Daily Event").setValue(badPostureCount)
+        DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference("Read Data").child(userId).child("Daily Event");
+        dataRef.child("Event Count").setValue(badPostureCount)
                 .addOnSuccessListener(aVoid -> {
                     Log.d("BPCount", "Count = " + badPostureCount);
                 })
                 .addOnFailureListener(e -> {
                     Log.e("BPCount", "Failed to save count: " + e.getMessage());
                 });
+    }
+
+    //Store&Save Start Time
+    private void saveStartTime() {
+        DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference("Read Data").child(userId).child("Daily Event");
+        startTime = dateFormat.format(new Date(currentTimeMillis));
+
+        // Save the start time to the "Start Time" node
+        dataRef.child("Start Time").setValue(startTime)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("StartTime", "Time = " + startTime);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("StartTime", "Failed to save start time: " + e.getMessage());
+                });
+    }
+
+    //Store&Save End Time
+    private void saveEndTime() {
+        DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference("Read Data").child(userId).child("Daily Event");
+
+        // Update the value of currentTimeMillis before saving the end time
+        currentTimeMillis = System.currentTimeMillis();
+
+        endTime = dateFormat.format(new Date(currentTimeMillis));
+
+        // Save the end time to the "End Time" node
+        dataRef.child("End Time").setValue(endTime)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("EndTime", "Time = " + endTime);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("EndTime", "Failed to save end time: " + e.getMessage());
+                });
+    }
+
+    // Calculate event duration in minutes
+    private long calculateDurationInMinutes() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date startDate = dateFormat.parse(startTime);
+            Date endDate = dateFormat.parse(endTime);
+            long durationInMillis = endDate.getTime() - startDate.getTime();
+            return TimeUnit.MILLISECONDS.toMinutes(durationInMillis);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
 
@@ -160,7 +202,7 @@ public class HomeFragment extends Fragment {
 
         // Retrieving values from SharedPreferences
         SharedPreferences sp = getActivity().getSharedPreferences("sharedData", Context.MODE_PRIVATE);
-        badPostureCount = sp.getInt("badCount", 0);
+        //badPostureCount = sp.getInt("badCount", 0);
         isFlex = sp.getBoolean("isFlexSensor", true);
         int phoneVibrate = sp.getInt("phoneVibrate", -1);
         SharedPreferences.Editor editor = sp.edit();
@@ -258,7 +300,6 @@ public class HomeFragment extends Fragment {
                             incrementationOccurred[0] = true;
                             badPostureCount++;
                             Log.e("BPCount", "Count = " + badPostureCount);
-                            editor.putInt("badCount", badPostureCount).commit();
                             saveBadPostureCount(badPostureCount);
                         } else if (!isBad) {
                             incrementationOccurred[0] = false;
@@ -305,6 +346,7 @@ public class HomeFragment extends Fragment {
         bleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 active = false;
                 alertClicked = true;
                 currentCalibrate = 0;
@@ -385,12 +427,42 @@ public class HomeFragment extends Fragment {
                     public void onClick(View v) {
                         Toast.makeText(getActivity(), "Success!", Toast.LENGTH_SHORT).show();
                         active = true;
+                        saveStartTime();
                         dialog.dismiss();
                     }
                 });
 
             }
         });
+
+
+        //Finish Button
+        finishBtn = (Button) view.findViewById(R.id.finish_button);
+        finishBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveEndTime();
+
+                int totalEvent = badPostureCount;
+                // You can store this value to a local database or file, or send it to a server
+
+                // reset the bad posture count variable
+                badPostureCount = 0;
+
+                // Calculate event duration
+                long durationInMinutes = calculateDurationInMinutes();
+
+                ReadData readData = new ReadData();
+                readData.setTotalEvent(totalEvent);
+
+                // save the totalEvent value and event duration to Firebase
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("Read Data");
+                myRef.child(userId).child("History").child("Total Event").setValue(totalEvent);
+                myRef.child(userId).child("History").child("Event Duration (min)").setValue(durationInMinutes);
+            }
+        });
+
 
         return view;
     }
