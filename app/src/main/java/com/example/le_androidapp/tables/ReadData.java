@@ -5,8 +5,9 @@ public class ReadData {
     public int eventBad;
     public String recordedTime;
     public String userId;
-    public int totalEvent;
-    public String totalTime;
+    public static int totalEvent;
+    public int totalTime;
+    private String dailyEvent;
 
     public ReadData() {
 
@@ -16,6 +17,14 @@ public class ReadData {
         this.userId=userId;
     }
 
+    public ReadData(String userId, String s, String s1) {
+    }
+    public String getDailyEvent(){
+        return dailyEvent;
+    }
+    public void setDailyEvent(int totalEvent){
+        this.dailyEvent = String.valueOf(totalEvent);
+    }
 
     public int getEventBad() {
         return eventBad;
@@ -28,7 +37,7 @@ public class ReadData {
         return totalEvent;
     }
 
-    public void setTotalTime(String totalTime) {
+    public void setTotalTime(int totalTime) {
         this.totalTime = totalTime;
     }
 
@@ -47,18 +56,23 @@ public class ReadData {
     public String setUserId() {this.userId = userId;
         return userId;
     }
-    public String getTotalTime() {
+    public int getTotalTime() {
         return totalTime;
     }
     public int getTotalEvent() { return totalEvent;
     }
 
-    public ReadData(int eventBad, String recordedTime, String userId, int totalEvent) {
+    public ReadData(int eventBad, String recordedTime, String userId, int totalEvent, int totalTime) {
         this.eventBad = eventBad;
         this.recordedTime = recordedTime;
         this.userId = userId;
         this.totalEvent = totalEvent;
+        this.totalTime = totalTime;
     }
+
+    public static int getTotalEvent(Object o) {return totalEvent;
+    }
+
 
 }
 

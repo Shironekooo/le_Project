@@ -129,7 +129,7 @@ public class HomeFragment extends Fragment {
 
 
     }
-    String userId = "flex20";
+    String userId = "sampleId";
 
     private void saveBadPostureCount(int badPostureCount) {
         DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference("Read Data").child(userId).child("Daily Event");

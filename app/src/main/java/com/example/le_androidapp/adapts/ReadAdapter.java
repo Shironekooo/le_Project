@@ -9,23 +9,24 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.le_androidapp.OverviewFragment;
 import com.example.le_androidapp.R;
 import com.example.le_androidapp.tables.ReadData;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 
 import java.util.List;
 
-public class ReadAdapter extends FirebaseRecyclerAdapter<ReadData, ReadViewHolder> {
+public class ReadAdapter extends RecyclerView.Adapter<ReadViewHolder> {
 
-    private final Context context;
+    private final Fragment historyFragment;
+    private final List<ReadData> readDataList;
+    private LayoutInflater inflater;
 
-    public ReadAdapter(@NonNull FirebaseRecyclerOptions<ReadData> options, Context context) {
-        super(options);
-        this.context = context;
+    public ReadAdapter(Fragment historyFragment, List<ReadData> readDataList) {
+        this.historyFragment = historyFragment;
+        this.readDataList = readDataList;
     }
 
     @NonNull
@@ -36,24 +37,36 @@ public class ReadAdapter extends FirebaseRecyclerAdapter<ReadData, ReadViewHolde
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull ReadViewHolder holder, int position, @NonNull ReadData model) {
-        holder.totalEvent.setText(String.valueOf(model.getTotalEvent()));
-        holder.totalTime.setText(String.valueOf(model.getTotalTime()));
+    public void onBindViewHolder(@NonNull ReadViewHolder holder, int position) {
+        ReadData dataItem = readDataList.get(position);
+        holder.totalEvent.setText(String.valueOf(dataItem.totalEvent));
+        holder.totalTime.setText(String.valueOf(dataItem.totalTime));
         holder.dataCard.setOnClickListener(v -> {
-            Intent intent = new Intent(holder.itemView.getContext(), OverviewFragment.class);
-            intent.putExtra("Total Event", model.getTotalEvent());
-            intent.putExtra("Total Time", model.getTotalTime());
-            holder.itemView.getContext().startActivity(intent);
+            Intent intent = new Intent(historyFragment.requireContext(), OverviewFragment.class);
+            intent.putExtra("Total Event", readDataList.get(holder.getAdapterPosition()).getTotalEvent());
+            intent.putExtra("Total Time", readDataList.get(holder.getAdapterPosition()).getTotalTime());
+            historyFragment.startActivity(intent);
         });
     }
 
 
-
-    /*@Override
+    @Override
     public int getItemCount() {
         return readDataList.size();
-    }*/
+    }
 }
+class ReadViewHolder extends RecyclerView.ViewHolder {
+    TextView totalEvent, totalTime;
+    CardView dataCard;
 
+    public ReadViewHolder(@NonNull View itemView) {
+        super(itemView);
+
+
+        totalEvent = itemView.findViewById(R.id.total_event);
+        totalTime = itemView.findViewById(R.id.total_time);
+        dataCard = itemView.findViewById(R.id.dataCard);
+    }
+}
 
 

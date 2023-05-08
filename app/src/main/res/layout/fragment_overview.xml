@@ -35,66 +35,47 @@
         app:searchIcon="@drawable/baseline_search_24"
         android:layout_marginBottom="15dp"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <!-- Sorting Options -->
+    <RadioGroup
+        android:id="@+id/sort_group"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:id="@+id/sortLayout">
+        android:layout_marginTop="1dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/eventAsc"
+        <RadioButton
+            android:id="@+id/event_asc_btn"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="8dp"
-            android:backgroundTint="@color/gray_700"
-            android:onClick="eventAscOnly"
-            android:text="EVENT ASC"
-            android:textColor="@color/accent"
+            android:layout_height="wrap_content"
+            android:text="Event ASC"
             android:textSize="12sp"
-            android:textStyle="bold"
-            tools:ignore="TouchTargetSizeCheck" />
+            android:textColor="@color/accent"/>
 
-        <TextView
-            android:id="@+id/eventDecs"
+        <RadioButton
+            android:id="@+id/event_desc_btn"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="8dp"
-            android:backgroundTint="@color/gray_700"
-            android:onClick="eventDescOnly"
-            android:text="EVENT DECS"
-            android:textColor="@color/accent"
+            android:layout_height="wrap_content"
+            android:text="Event DESC"
             android:textSize="12sp"
-            android:textStyle="bold"
-            tools:ignore="TouchTargetSizeCheck" />
+            android:textColor="@color/accent"/>
 
-        <TextView
-            android:id="@+id/dateAsc"
+        <RadioButton
+            android:id="@+id/time_asc_btn"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="8dp"
-            android:onClick="dateAscOnly"
-            android:text="DATE ASC"
-            android:textColor="@color/accent"
+            android:layout_height="wrap_content"
+            android:text="Time ASC"
             android:textSize="12sp"
-            android:textStyle="bold"
-            tools:ignore="TouchTargetSizeCheck" />
+            android:textColor="@color/accent"/>
 
-        <TextView
-            android:id="@+id/dateDecs"
+        <RadioButton
+            android:id="@+id/time_desc_btn"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="8dp"
-            android:onClick="dateDescOnly"
-            android:text="DATE DECS"
-            android:textColor="@color/accent"
+            android:layout_height="wrap_content"
+            android:text="Time DESC"
             android:textSize="12sp"
-            android:textStyle="bold"
-            tools:ignore="TouchTargetSizeCheck" />
-
-
-    </LinearLayout>
-
+            android:textColor="@color/accent"/>
+    </RadioGroup>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
@@ -103,8 +84,6 @@
         android:padding="5dp"
         android:id="@+id/dataView"
         tools:listitem="@layout/data_item">
-
     </androidx.recyclerview.widget.RecyclerView>
-
 
 </androidx.appcompat.widget.LinearLayoutCompat>
