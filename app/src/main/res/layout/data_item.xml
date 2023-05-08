@@ -23,7 +23,7 @@
                     android:id="@+id/eventLayout"
                     android:gravity="center_vertical">
                 <TextView
-                    android:id="@+id/eventText"
+                    android:id="@+id/textEvent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Total Event:"
@@ -36,7 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
-                    android:text="Text"
+                    android:text=""
                     android:layout_marginStart="15dp"
                     android:textColor="@android:color/white"/>
 

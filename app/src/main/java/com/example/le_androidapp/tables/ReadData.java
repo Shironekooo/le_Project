@@ -24,6 +24,9 @@ public class ReadData {
     public void setTotalEvent(int totalEvent) {
         this.totalEvent = totalEvent;
     }
+    public int getTotalEvent(int totalEvent) {
+        return totalEvent;
+    }
 
     public void setTotalTime(String totalTime) {
         this.totalTime = totalTime;
@@ -50,10 +53,11 @@ public class ReadData {
     public int getTotalEvent() { return totalEvent;
     }
 
-    public ReadData(int eventBad, String recordedTime, String userId) {
+    public ReadData(int eventBad, String recordedTime, String userId, int totalEvent) {
         this.eventBad = eventBad;
         this.recordedTime = recordedTime;
         this.userId = userId;
+        this.totalEvent = totalEvent;
     }
 
 }

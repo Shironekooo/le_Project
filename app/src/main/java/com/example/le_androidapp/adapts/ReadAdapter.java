@@ -14,17 +14,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.le_androidapp.OverviewFragment;
 import com.example.le_androidapp.R;
 import com.example.le_androidapp.tables.ReadData;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 
 import java.util.List;
 
-public class ReadAdapter extends RecyclerView.Adapter<ReadViewHolder> {
+public class ReadAdapter extends FirebaseRecyclerAdapter<ReadData, ReadViewHolder> {
 
     private final Context context;
-    private final List<ReadData> readDataList;
 
-    public ReadAdapter(Context context, List<ReadData> readDataList) {
+    public ReadAdapter(@NonNull FirebaseRecyclerOptions<ReadData> options, Context context) {
+        super(options);
         this.context = context;
-        this.readDataList = readDataList;
     }
 
     @NonNull
@@ -35,35 +36,23 @@ public class ReadAdapter extends RecyclerView.Adapter<ReadViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ReadViewHolder holder, int position) {
-        ReadData dataItem = readDataList.get(position);
-        holder.totalEvent.setText(String.valueOf(dataItem.totalEvent));
-        holder.totalTime.setText(String.valueOf(dataItem.totalTime));
+    protected void onBindViewHolder(@NonNull ReadViewHolder holder, int position, @NonNull ReadData model) {
+        holder.totalEvent.setText(String.valueOf(model.getTotalEvent()));
+        holder.totalTime.setText(String.valueOf(model.getTotalTime()));
         holder.dataCard.setOnClickListener(v -> {
-            Intent intent = new Intent(context, OverviewFragment.class);
-            intent.putExtra("Total Event", readDataList.get(holder.getAdapterPosition()).getTotalEvent());
-            intent.putExtra("Total Time", readDataList.get(holder.getAdapterPosition()).getTotalTime());
-            context.startActivity(intent);
+            Intent intent = new Intent(holder.itemView.getContext(), OverviewFragment.class);
+            intent.putExtra("Total Event", model.getTotalEvent());
+            intent.putExtra("Total Time", model.getTotalTime());
+            holder.itemView.getContext().startActivity(intent);
         });
     }
 
-    @Override
+
+
+    /*@Override
     public int getItemCount() {
         return readDataList.size();
-    }
-}
-    class ReadViewHolder extends RecyclerView.ViewHolder {
-        TextView totalEvent, totalTime;
-        CardView dataCard;
-
-        public ReadViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-
-            totalEvent = itemView.findViewById(R.id.total_event);
-            totalTime = itemView.findViewById(R.id.total_time);
-            dataCard = itemView.findViewById(R.id.dataCard);
-    }
+    }*/
 }
 
 

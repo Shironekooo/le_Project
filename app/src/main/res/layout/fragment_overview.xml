@@ -101,7 +101,7 @@
         android:layout_margin="20dp"
         android:layout_height="400dp"
         android:padding="5dp"
-        android:id="@+id/dataRecycler"
+        android:id="@+id/dataView"
         tools:listitem="@layout/data_item">
 
     </androidx.recyclerview.widget.RecyclerView>

@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,12 +20,16 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.le_androidapp.adapts.ReadAdapter;
+import com.example.le_androidapp.adapts.ReadViewHolder;
 import com.example.le_androidapp.data.ConnectionState;
 import com.example.le_androidapp.tables.ReadData;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 
@@ -43,10 +49,10 @@ public class OverviewFragment extends Fragment {
 
     // Inject your dependencies here
 
-    TextView eventText;
+    TextView eventValue, timeValue;
     DatabaseReference dataRef;
 
-    ValueEventListener eventListener;
+    private FirebaseRecyclerAdapter<ReadData, ReadViewHolder> readAdapter;
 
     public OverviewFragment() {
         // Required empty public constructor
@@ -62,46 +68,53 @@ public class OverviewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_overview, container, false);
 
-        eventText = view.findViewById(R.id.total_event);
+        eventValue = view.findViewById(R.id.total_event);
+        timeValue = view.findViewById(R.id.total_time);
+        RecyclerView recyclerView = view.findViewById(R.id.dataView);
 
-        RecyclerView recyclerView = view.findViewById(R.id.dataRecycler);
-        GridLayoutManager layoutManager = new GridLayoutManager(view.getContext(), 1);
-        recyclerView.setLayoutManager(layoutManager);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setCancelable(false);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-        List<ReadData> readDataList = new ArrayList<>();
-
-        // Initialize the adapter with the empty readDataList
-        ReadAdapter readAdapter = new ReadAdapter(getContext(), readDataList);
-        recyclerView.setAdapter(readAdapter);
 
         // Get the reference to the "Read Data" node in Firebase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        dataRef = FirebaseDatabase.getInstance().getReference("Read Data");
-
-
+        dataRef = database.getReference("Read Data");
 
         // Query the data based on user ID
-        String userId = "-NUnto4vMGTn3HlEScVx";
-        eventListener = dataRef.child(userId).child("History").addValueEventListener(new ValueEventListener() {
+        String userId = "-NUouRVxUtfSNPt7Tpin";
+        Query query = dataRef.child(userId).child("History");
+
+        FirebaseRecyclerOptions<ReadData> options =
+                new FirebaseRecyclerOptions.Builder<ReadData>()
+                        .setQuery(query, ReadData.class)
+                        .build();
+
+        readAdapter = new FirebaseRecyclerAdapter<ReadData, ReadViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull ReadViewHolder holder, int position, @NonNull ReadData model) {
+                holder.bind(model);
+            }
+
+            @NonNull
+            @Override
+            public ReadViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.data_item, parent, false);
+                return new ReadViewHolder(view);
+            }
+        };
+        recyclerView.setAdapter(readAdapter);
+
+        dataRef.child(userId).child("History").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                Integer eventCountValue = dataSnapshot.child("eventCount").getValue(Integer.class);
-//                if (eventCountValue != null) {
-//                    int eventCount = eventCountValue.intValue();
-//                    eventText.setText(String.valueOf(eventCount));
-//                }
-//                // Retrieve the total event and event duration from Firebase
-//                int totalEvent = dataSnapshot.child("Total Event").getValue(Integer.class);
-//                long eventDuration = dataSnapshot.child("Event Duration (min)").getValue(Long.class);
-//
-//                // Display the total event and event duration in the TextView
-//                //eventText.setText("Total Event: " + totalEvent + "\nEvent Duration (min): " + eventDuration);
-//                eventText.setText("Event Duration (min): " + eventDuration);
+                // Retrieve the total event from Firebase
+                int totalEvent = 0;
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    ReadData readData = child.getValue(ReadData.class);
+                    if (readData != null) {
+                        totalEvent += readData.getTotalEvent();
+                    }
+                }
+
+                // Display the total event in the TextView
+                eventValue.setText(String.valueOf(totalEvent));
             }
 
             @Override
@@ -112,14 +125,28 @@ public class OverviewFragment extends Fragment {
 
         return view;
     }
-
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        // Remove the event listener when the view is destroyed
-        if (eventListener != null) {
-            dataRef.removeEventListener(eventListener);
-        }
+    public void onStart() {
+        super.onStart();
+        // Start listening for changes in the database and update the adapter
+        readAdapter.startListening();
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Stop listening for changes in the database and update the adapter
+        readAdapter.stopListening();
+    }
 }
+
+//    @Override
+//    public void onDestroyView() {
+//        super.onDestroyView();
+//        // Remove the event listener when the view is destroyed
+//        if (eventListener != null) {
+//            dataRef.removeEventListener(eventListener);
+//        }
+//    }
+//
+//}

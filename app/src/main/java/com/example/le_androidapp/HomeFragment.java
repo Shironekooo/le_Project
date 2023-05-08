@@ -77,7 +77,7 @@ public class HomeFragment extends Fragment {
     final private double pitchDifference = 26.67;
     final private double baseAngle = 90.0;
     final private double marginOfError = 10;
-    final private double flexSensitivityAdjustment = 15;
+    final private double flexSensitivityAdjustment = 10;
 
     // Initialization for Calibration
     private float pitchSummation = 0;
@@ -129,7 +129,7 @@ public class HomeFragment extends Fragment {
 
 
     }
-    String userId = "-NUo1t7j4T9anU-lioKL";
+    String userId = "flex20";
 
     private void saveBadPostureCount(int badPostureCount) {
         DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference("Read Data").child(userId).child("Daily Event");
