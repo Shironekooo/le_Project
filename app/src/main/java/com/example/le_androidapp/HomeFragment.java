@@ -77,7 +77,7 @@ public class HomeFragment extends Fragment {
     final private double pitchDifference = 26.67;
     final private double baseAngle = 90.0;
     final private double marginOfError = 10;
-    final private double flexSensitivityAdjustment = 10;
+    final private double flexSensitivityAdjustment = 15;
 
     // Initialization for Calibration
     private float pitchSummation = 0;
